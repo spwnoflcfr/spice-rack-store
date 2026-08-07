@@ -1,0 +1,10 @@
+{
+  "name": "woolong-store",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@upstash/ratelimit": "^1.0.0",
+    "@upstash/redis": "^1.25.0"
+  }
+}
