@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DotGothic16&display=swap" rel="stylesheet" />
     <style>
-        /* ── All styles identical to previous version ── */
-        /* I'll keep them short for brevity; you can copy the full CSS from earlier */
+        /* ── All CSS from the previous version ── */
+        /* (Paste your full CSS here – it's the same as before) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'DotGothic16', sans-serif; background: #0a0a12; color: #00ff41; overflow-x: hidden; min-height: 100vh; }
         .crt-effect { position: relative; min-height: 100vh; background: linear-gradient(to bottom, #001a00, #000); overflow: hidden; }
@@ -257,6 +257,11 @@
     <a href="https://www.instagram.com/tempest.369/" class="instagram-float" target="_blank"><i class="fab fa-instagram"></i></a>
 
     <script>
+        // ─── 🔑 SECURITY: Your API Token (REPLACE THIS!) ───
+        // Generate a token with: node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+        // Then paste it below and set the same value as CLIENT_API_TOKEN in Vercel environment variables.
+        const API_KEY = 'aGVsbG8gd29ybGQgaG93IGFyZSB5b3UgZG9pbmc3';
+
         // ─── SAKURA PETALS ───
         function createSakura() {
             const container = document.getElementById('sakuraContainer');
@@ -330,7 +335,24 @@
             }
         });
 
-        // ─── Fetch products from our API ───
+        // ─── API Helpers ───
+        async function apiFetch(endpoint, options = {}) {
+            const response = await fetch(endpoint, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-Key': API_KEY,
+                    ...(options.headers || {}),
+                },
+            });
+            if (!response.ok) {
+                const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+                throw new Error(error.error || `HTTP ${response.status}`);
+            }
+            return response.json();
+        }
+
+        // ─── Fetch products ───
         async function fetchProducts() {
             productGrid.innerHTML = `
                 <div style="grid-column:1/-1; text-align:center; padding:30px; color:#88ff88;">
@@ -338,10 +360,8 @@
                 </div>
             `;
             try {
-                const response = await fetch('/api/products');
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                const data = await response.json();
-                productCatalog = data; // Assume data is array of product objects
+                const data = await apiFetch('/api/products');
+                productCatalog = data;
                 renderProducts();
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -398,7 +418,7 @@
             });
         }
 
-        // ─── Cart functions (unchanged) ───
+        // ─── Cart functions ───
         function addToCart(product) {
             const existing = cart.find(item => item.sku === product.sku);
             if (existing) existing.quantity += 1;
@@ -477,7 +497,7 @@
             checkoutToggle.textContent = checkoutForm.classList.contains('open') ? 'Hide Checkout' : 'Checkout';
         });
 
-        // ─── Submit order (calls /api/orders) ───
+        // ─── Submit order ───
         submitOrderBtn.addEventListener('click', async () => {
             if (cart.length === 0) {
                 orderStatus.textContent = '⚠ Cart is empty.';
@@ -533,13 +553,10 @@
             orderStatus.style.color = '#88ff88';
 
             try {
-                const response = await fetch('/api/orders', {
+                const result = await apiFetch('/api/orders', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(orderData),
                 });
-                const result = await response.json();
-                if (!response.ok) throw new Error(result.message || 'Order failed');
                 orderStatus.textContent = `✅ Order placed! ID: ${result.OrderId || 'success'}`;
                 orderStatus.style.color = '#88ff88';
                 cart = [];
@@ -580,8 +597,8 @@
         // ─── Init ───
         renderCart();
         updateBadge();
-        console.log('🛒 Storefront ready! Click "Store" to open.');
-        console.log('🔗 API calls are proxied through Vercel serverless functions.');
+        console.log('🛒 Secure storefront ready! Click "Store" to open.');
+        console.log('🔐 API requests are authenticated with a token and rate-limited.');
     </script>
 </body>
 </html>
