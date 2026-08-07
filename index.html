@@ -8,43 +8,62 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            /* Theme Colors from the images */
-            --bg-dark: #0a0a0a;
+            /* Updated Pastel / Glass Theme Colors */
             --pink-solid: #ea68a2;
-            --pink-gradient: linear-gradient(to bottom, #fdb6da, #f6469c);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.15);
+            --bg-pastel: #fff0f5;
+            --text-dark: #4a3642;
+            --shadow-color: rgba(234, 104, 162, 0.15);
         }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--bg-dark);
+            background-color: var(--bg-pastel);
             font-family: 'Quicksand', sans-serif;
-            color: #ffffff;
+            color: var(--text-dark);
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* The Glassy "Bubble" Container */
+        /* Cute Sparkle / Star background to match the orb image */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(#ffffff 1.5px, transparent 1.5px);
+            background-size: 30px 30px;
+            opacity: 0.6;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Glassy "Bubble" Container - Light Pastel Theme */
         .container {
             width: 100%;
             max-width: 800px;
             padding: 2rem 1rem;
             margin: 2rem 1rem;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 30px;
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            box-shadow: 0 0 30px rgba(234, 104, 162, 0.2);
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 40px;
+            box-shadow: 0 15px 35px var(--shadow-color);
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
+            z-index: 1;
         }
 
         /* 8-bit Pixel Header */
@@ -54,7 +73,7 @@
             line-height: 1.4;
             margin: 0 0 0.5rem 0;
             /* Pink Gradient Text */
-            background: var(--pink-gradient);
+            background: linear-gradient(to bottom, #fdb6da, #f6469c);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: none;
@@ -66,10 +85,10 @@
             font-family: 'Quicksand', sans-serif;
             font-weight: 600;
             font-size: 1.1rem;
-            color: #ddd;
+            color: #ce6b95;
             margin-bottom: 2rem;
             margin-top: 0;
-            border-bottom: 2px solid #333;
+            border-bottom: 2px solid #ffb3cc;
             padding-bottom: 0.5rem;
             display: inline-block;
         }
@@ -83,36 +102,36 @@
             margin-bottom: 2rem;
         }
 
-        /* Product Cards */
+        /* Product Cards - White and clean */
         .product-item {
-            background: rgba(255, 255, 255, 0.08);
+            background: #ffffff;
             padding: 1.5rem;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            border: 1px solid #ffe1ed;
+            box-shadow: 0 4px 12px var(--shadow-color);
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 0.8rem;
-            backdrop-filter: blur(2px);
         }
 
         .product-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(234, 104, 162, 0.3);
-            border-color: #ea68a2;
+            box-shadow: 0 8px 20px var(--shadow-color);
+            border-color: #fbaac2;
         }
 
         .product-item h3 {
             font-size: 1.1rem;
             margin: 0;
-            color: #fff;
+            color: var(--text-dark);
         }
 
         .product-item p {
             margin: 0;
             font-size: 0.9rem;
-            color: #bbb;
+            color: #7a5a6b;
         }
 
         /* Solid Pink "MiladySpice" Bottom Banner Style */
@@ -125,14 +144,17 @@
             font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
-            transition: opacity 0.3s ease;
+            transition: all 0.2s ease;
             font-family: 'Quicksand', sans-serif;
             width: 100%;
             max-width: 180px;
+            box-shadow: 0 4px 12px rgba(234, 104, 162, 0.3);
         }
 
         .btn-buy:hover {
-            opacity: 0.8;
+            transform: scale(1.03);
+            opacity: 0.9;
+            box-shadow: 0 6px 16px rgba(234, 104, 162, 0.4);
         }
     </style>
 </head>
@@ -162,11 +184,10 @@
                 <p>Savory Kick</p>
                 <button class="btn-buy">Add to Cart</button>
             </div>
-            <!-- Add more product items as needed, the styling will automatically apply -->
         </div>
         
-        <!-- A bottom pink bar similar to the MiladySpice image -->
-        <div style="width: 100%; background-color: var(--pink-solid); padding: 1rem 0; margin-top: 1rem; border-radius: 0 0 30px 30px;">
+        <!-- Bottom pink bar (Updated inline style to hardcode pink and white text) -->
+        <div style="width: 100%; background-color: #ea68a2; color: #ffffff; padding: 1rem 0; margin-top: 1rem; border-radius: 0 0 30px 30px;">
             <p style="margin: 0; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px;">MiladySpice</p>
         </div>
     </div>
