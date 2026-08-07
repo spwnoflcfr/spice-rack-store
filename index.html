@@ -157,7 +157,7 @@
             flex: 2;
             overflow-y: auto;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Slightly wider for buttons */
             gap: 16px;
             padding-right: 8px;
         }
@@ -179,11 +179,12 @@
         .product-card:hover { border-color: #ffffff; box-shadow: 0 0 20px rgba(255, 255, 255, 0.15); }
         .product-card img {
             width: 100%;
-            max-height: 100px;
+            max-height: 120px;
             object-fit: contain;
             border-radius: 4px;
             background: #1a001a;
             margin-bottom: 6px;
+            cursor: pointer;
         }
         .product-card .no-image {
             width: 100%;
@@ -219,21 +220,43 @@
             font-family: 'Press Start 2P', cursive;
             margin: 4px 0;
         }
-        .product-card .add-btn {
-            background: #ff4d9e;
-            color: #000;
-            border: none;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 0.5rem;
-            padding: 6px 12px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: 0.2s;
+
+        /* ─── NEW: Button Group Layout ─── */
+        .product-actions {
+            display: flex;
+            gap: 6px;
             width: 100%;
             margin-top: auto;
         }
-        .product-card .add-btn:hover { background: #ffffff; box-shadow: 0 0 12px #ffffff; }
-        .product-card .add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .product-actions button {
+            flex: 1;
+            border: none;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.4rem;
+            padding: 6px 4px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.2s;
+            text-transform: uppercase;
+        }
+        .btn-quickview {
+            background: #a0337a;
+            color: #fff;
+        }
+        .btn-quickview:hover { background: #ffd1dc; color: #000; }
+        .btn-addcart {
+            background: #ff4d9e;
+            color: #000;
+        }
+        .btn-addcart:hover { background: #ffffff; box-shadow: 0 0 12px #ffffff; }
+        .btn-instabuy {
+            background: #ff007f;
+            color: #fff;
+        }
+        .btn-instabuy:hover { background: #ffb7c5; color: #000; }
+        
+        .product-actions button:disabled { opacity: 0.4; cursor: not-allowed; }
+
         .product-card .loading-placeholder {
             width: 100%;
             height: 80px;
@@ -251,6 +274,47 @@
             0%, 100% { opacity: 0.3; }
             50% { opacity: 0.8; }
         }
+
+        /* ─── QUICK VIEW MODAL ─── */
+        .quickview-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .quickview-modal.open { display: flex; }
+        .quickview-content {
+            background: #1a001a;
+            border: 3px solid #ff4d9e;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 40px rgba(255, 77, 158, 0.5);
+        }
+        .quickview-close {
+            position: absolute;
+            top: 10px; right: 15px;
+            font-size: 1.5rem;
+            color: #ff007f;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+        }
+        .quickview-close:hover { color: #fff; }
+        .quickview-content img {
+            max-width: 100%;
+            max-height: 250px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+        .quickview-content h2 { font-family: 'Press Start 2P', cursive; font-size: 1rem; color: #ffffff; margin-bottom: 10px; }
+        .quickview-content p { font-size: 0.8rem; color: #ffd1dc; margin-bottom: 15px; line-height: 1.4; }
 
         /* ── Cart sidebar ── */
         .cart-sidebar {
@@ -389,7 +453,7 @@
         @media (max-width: 768px) {
             .storefront-body { flex-direction: column; overflow-y: auto; }
             .cart-sidebar { max-width: none; min-width: 0; flex: none; max-height: 200px; }
-            .product-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); max-height: 300px; }
+            .product-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); max-height: 300px; }
             .api-drawer {
                 top: auto;
                 bottom: -85vh;
@@ -405,9 +469,10 @@
             .api-trigger { font-size: 0.5rem; padding: 5px 14px; gap: 8px; top: 4px; }
             .api-trigger .badge { width: 16px; height: 16px; font-size: 0.4rem; }
             .cart-item .name { font-size: 0.5rem; }
+            .product-actions { flex-direction: column; gap: 4px; }
         }
         @media (max-width: 420px) {
-            .product-grid { grid-template-columns: 1fr 1fr; }
+            .product-grid { grid-template-columns: 1fr; }
         }
 
         .mobile-drawer-handle {
@@ -607,45 +672,43 @@
         .cta-button:hover { background: #ffffff; color: #000; box-shadow: 0 0 10px #ffffff; }
         .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ff4d9e; font-size: clamp(0.6rem, 2vw, 0.8rem); color: #ff99cc; }
 
-        /* ─── UPDATED: X (Twitter) Floating Button ─── */
+        /* ─── Floating X and Linktree ─── */
         .x-float {
             position: fixed; bottom: 25px; right: 25px; width: 65px; height: 65px;
-            background: #ffffff; /* White fill */
-            border: 3px solid #ff4d9e; /* Bright pink neon border */
+            background: #ffffff;
+            border: 3px solid #ff4d9e;
             border-radius: 50%; display: flex; justify-content: center;
             align-items: center; 
-            color: #000000; /* Black icon for contrast */
+            color: #000000;
             font-size: 2rem; text-decoration: none;
-            box-shadow: 0 0 25px rgba(255, 77, 158, 0.8); /* Strong pink glow */
+            box-shadow: 0 0 25px rgba(255, 77, 158, 0.8);
             transition: 0.3s ease; z-index: 999;
-        }
-                .x-btn-img {
-            width: 28px;
-            height: 28px;
-            object-fit: contain; /* Prevents logo from stretching */
-            display: block;
         }
         .x-float:hover { 
             transform: scale(1.15); 
             box-shadow: 0 0 35px #ff4d9e, 0 0 60px #ffb7c5;
         }
-
-        /* ─── UPDATED: Linktree Floating Button ─── */
+        .x-btn-img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            display: block;
+        }
         .linktree-float {
             position: fixed; bottom: 25px; left: 25px; width: 65px; height: 65px;
             background: #39e09e; 
-            border: 3px solid #ff4d9e; /* Added matching pink border */
+            border: 3px solid #ff4d9e;
             border-radius: 50%; display: flex; justify-content: center;
             align-items: center; color: white; font-size: 2rem; text-decoration: none;
-            box-shadow: 0 0 25px rgba(255, 77, 158, 0.8); /* Added matching pink glow */
+            box-shadow: 0 0 25px rgba(255, 77, 158, 0.8);
             transition: 0.3s ease; z-index: 999;
         }
         .linktree-float:hover { 
             transform: scale(1.15); 
-            box-shadow: 0 0 35px #ff4d9e, 0 0 60px #ffb7c5; /* Added matching hover glow */
+            box-shadow: 0 0 35px #ff4d9e, 0 0 60px #ffb7c5;
         }
 
-        /* ─── UPDATED FALLING BACKGROUND ELEMENTS ─── */
+        /* ─── FALLING BACKGROUND ELEMENTS ─── */
         .sakura-container { 
             position: fixed; 
             top: 0; 
@@ -766,20 +829,20 @@
                         <h1 class="logo">Spice<span class="glitch" data-text="Rack">Rack</span> Store</h1>
                     </a>
 
-                    <div class="project-box"><h2 class="project-title">Sugar <span>...</span></h2><div class="buttons-container"><a href="#" class="cta-button"><i class="fas fa-external-link-alt"></i>🧁</a></div></div>
-                    <div class="project-box"><h2 class="project-title">... <span>and Spice!!!</span></h2><div class="buttons-container"><a href="#" class="cta-button"><i class="fas fa-external-link-alt"></i>🌶️</a></div></div>
-                    <div class="project-box"><h2 class="project-title">and... <span>Everything nice.</span></h2><div class="buttons-container"><a href="#" class="cta-button"><i class="fas fa-external-link-alt"></i>😁</a></div></div>
+                    <div class="project-box"><h2 class="project-title">McGeeverse <span>in SPACE!</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/mcgeeverse" class="cta-button"><i class="fas fa-external-link-alt"></i>McGee</a></div></div>
+                    <div class="project-box"><h2 class="project-title">Sadskullz <span>the Crypt</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/SSz" class="cta-button"><i class="fas fa-external-link-alt"></i>BOO!</a></div></div>
+                    <div class="project-box"><h2 class="project-title">LORE <span>for EVERYTHING!</span></h2><div class="buttons-container"><a href="https://paragraph.com/@the-tempest" class="cta-button"><i class="fas fa-external-link-alt"></i>LORE</a></div></div>
 
-                    <div class="footer"><p><a href="https://wie.neocities.com">© 2026 WOOLONG INTERNATIONAL EXCHANGE. ALL RIGHTS RESERVED.</a></p></div>
+                    <div class="footer"><p>© 2026 WOOLONG INTERNATIONAL EXCHANGE. ALL RIGHTS RESERVED.</p></div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- X (formerly Twitter) & Linktree -->
-<a href="https://x.com/MiladySpice" class="x-float" target="_blank">
-    <img src="x-logo.png" alt="X" class="x-btn-img" />
-</a>
+    <a href="https://x.com/MiladySpice" class="x-float" target="_blank">
+        <img src="x-logo.png" alt="X" class="x-btn-img" />
+    </a>
     <a href="https://linktr.ee/miladyspice" class="linktree-float" target="_blank"><i class="fa-solid fa-tree"></i></a>
 
     <script>
@@ -787,21 +850,17 @@
         function createSakura() {
             const container = document.getElementById('sakuraContainer');
             container.innerHTML = '';
-            // Using emojis for Pill, Syringe/Needle, and Wine Glass
             const emojis = ['💊', '💉', '🍷'];
             const count = Math.min(30, Math.floor(window.innerWidth / 25));
             for (let i = 0; i < count; i++) {
                 const element = document.createElement('div');
                 element.classList.add('sakura');
-                // Randomly select an emoji
                 element.textContent = emojis[Math.floor(Math.random() * emojis.length)];
                 element.style.left = Math.random() * 100 + 'vw';
-                // Vary the font size (20px to 44px)
                 const size = 20 + Math.random() * 24;
                 element.style.fontSize = size + 'px';
                 element.style.animationDuration = (12 + Math.random() * 18) + 's';
                 element.style.animationDelay = (Math.random() * 20) + 's';
-                // Vary opacity from slightly faded to solid
                 element.style.opacity = 0.3 + Math.random() * 0.6;
                 container.appendChild(element);
             }
@@ -814,15 +873,10 @@
         const PARTNER_BILLING_KEY_RAW = '0AF5+RRxmfSDp8rDQa7fQMc2RU1Mq6Z34j2eY4c0G1c=';
         const PARTNER_BILLING_KEY_ENCODED = encodeURIComponent(PARTNER_BILLING_KEY_RAW);
 
-        // ─── YOUR PRODUCT SKUs (from screenshot) ───
+        // ─── API SKUs (ACTIVE PRODUCTS) ───
+        // Limited to the Car Magnet for testing. Other products preserved in text file.
         const PRODUCT_SKUS = [
-            { sku: 'CarMagnet_3x11.5', partnerSku: 'CarMagnet_3x11.5-20260802191253200', price: 12.99, currency: 'USD' },
-            { sku: 'AcrylicSquareMagnet-2.5x2.5', partnerSku: 'AcrylicSquareMagnet-2.5x2.5-20260802190601379', price: 9.99, currency: 'USD' },
-            { sku: 'FlatCard-4x8-McCoy-Single-10Pack', partnerSku: 'FlatCard-4x8-McCoy-Single-10Pack-20260801232251786', price: 24.99, currency: 'USD' },
-            { sku: 'FlatCard-4x8-McCoy-Single-1Pack', partnerSku: 'FlatCard-4x8-McCoy-Single-1Pack-20260801232251787', price: 4.99, currency: 'USD' },
-            { sku: 'FlatCard-4x8-McCoy-Single-5Pack', partnerSku: 'FlatCard-4x8-McCoy-Single-5Pack-20260801232251786', price: 14.99, currency: 'USD' },
-            { sku: 'Flask-8oz', partnerSku: 'Flask-8oz-20260802190322995', price: 19.99, currency: 'USD' },
-            { sku: 'ShotGlass-1.5oz', partnerSku: 'ShotGlass-1.5oz-20260802000502901', price: 7.99, currency: 'USD' },
+            { sku: 'CarMagnet_3x11.5', price: 12.99, currency: 'USD' }
         ];
 
         // ─── DOM refs ───
@@ -838,6 +892,7 @@
         const checkoutForm = document.getElementById('checkoutForm');
         const submitOrderBtn = document.getElementById('submitOrderBtn');
         const orderStatus = document.getElementById('orderStatus');
+        const modal = document.getElementById('quickviewModal');
 
         // ─── State ───
         let cart = [];
@@ -906,10 +961,7 @@
             `;
 
             try {
-                // Fetch product catalog from Gooten
                 const data = await gootenFetch('https://api.print.io/api/products');
-                
-                // Build a map: SKU -> { name, imageUrl }
                 const catalog = {};
                 if (data && data.Items) {
                     data.Items.forEach(item => {
@@ -941,7 +993,6 @@
                 productGrid.innerHTML = `
                     <div style="grid-column:1/-1; text-align:center; padding:30px; color:#ffb7c5;">
                         <div style="font-family:'Press Start 2P',cursive; font-size:0.7rem;">Loading products...</div>
-                        <div style="margin-top:10px; font-size:0.5rem; color:#663366;">⏳ Fetching from Gooten API</div>
                     </div>
                 `;
                 return;
@@ -954,11 +1005,10 @@
 
             productGrid.innerHTML = '';
             PRODUCT_SKUS.forEach((product) => {
-                // Look up product details from catalog
                 const catalogItem = productCatalog[product.sku];
                 const displayName = catalogItem?.name || product.sku;
                 const imageUrl = catalogItem?.imageUrl || null;
-                const displaySku = product.partnerSku || product.sku;
+                const displaySku = product.sku;
 
                 const card = document.createElement('div');
                 card.className = 'product-card';
@@ -975,13 +1025,17 @@
                     <div class="name">${displayName}</div>
                     <div class="sku-label">SKU: ${displaySku}</div>
                     <div class="price">$${product.price.toFixed(2)} ${product.currency}</div>
-                    <button class="add-btn" data-sku="${product.sku}" data-price="${product.price}" data-currency="${product.currency}" data-name="${displayName}">Add to Cart</button>
+                    <div class="product-actions">
+                        <button class="btn-quickview" data-sku="${product.sku}" data-name="${displayName}" data-image="${imageUrl || ''}" data-price="${product.price}" data-currency="${product.currency}">Quick View</button>
+                        <button class="btn-addcart" data-sku="${product.sku}" data-price="${product.price}" data-currency="${product.currency}" data-name="${displayName}">Add to Cart</button>
+                        <button class="btn-instabuy" data-sku="${product.sku}" data-price="${product.price}" data-currency="${product.currency}" data-name="${displayName}">Insta-Buy</button>
+                    </div>
                 `;
                 productGrid.appendChild(card);
             });
 
             // Attach event listeners
-            document.querySelectorAll('.add-btn').forEach(btn => {
+            document.querySelectorAll('.btn-addcart').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const sku = btn.dataset.sku;
                     const price = parseFloat(btn.dataset.price);
@@ -990,6 +1044,74 @@
                     addToCart({ sku, price, currency, name });
                 });
             });
+
+            document.querySelectorAll('.btn-quickview').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    openQuickView(btn.dataset.sku, btn.dataset.name, btn.dataset.image, btn.dataset.price, btn.dataset.currency);
+                });
+            });
+
+            document.querySelectorAll('.btn-instabuy').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const sku = btn.dataset.sku;
+                    const price = parseFloat(btn.dataset.price);
+                    const currency = btn.dataset.currency;
+                    const name = btn.dataset.name;
+                    instaBuy({ sku, price, currency, name });
+                });
+            });
+        }
+
+        // ─── Quick View Modal ───
+        function openQuickView(sku, name, image, price, currency) {
+            const modalHtml = `
+                <div class="quickview-modal open" id="quickviewModal">
+                    <div class="quickview-content">
+                        <span class="quickview-close" onclick="closeQuickView()">✕</span>
+                        ${image ? `<img src="${image}" alt="${name}" />` : '<div style="font-size:3rem; color:#663366;"><i class="fas fa-cube"></i></div>'}
+                        <h2>${name}</h2>
+                        <p>SKU: ${sku}</p>
+                        <p style="font-family:'Press Start 2P',cursive; font-size:1.2rem; color:#ffffff;">$${parseFloat(price).toFixed(2)} ${currency}</p>
+                        <div class="product-actions" style="margin-top:15px; justify-content:center;">
+                            <button class="btn-addcart" data-sku="${sku}" data-price="${price}" data-currency="${currency}" data-name="${name}" style="flex:0 1 auto; padding:10px 20px; font-size:0.6rem;">Add to Cart</button>
+                            <button class="btn-instabuy" data-sku="${sku}" data-price="${price}" data-currency="${currency}" data-name="${name}" style="flex:0 1 auto; padding:10px 20px; font-size:0.6rem;">Insta-Buy</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove old modal if exists, append new one
+            const oldModal = document.getElementById('quickviewModal');
+            if(oldModal) oldModal.remove();
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            // Re-attach listeners for the new buttons inside the modal
+            const newModal = document.getElementById('quickviewModal');
+            newModal.querySelector('.btn-addcart').addEventListener('click', (e) => {
+                const sku = e.target.dataset.sku;
+                const price = parseFloat(e.target.dataset.price);
+                const currency = e.target.dataset.currency;
+                const name = e.target.dataset.name;
+                addToCart({ sku, price, currency, name });
+                closeQuickView();
+            });
+            newModal.querySelector('.btn-instabuy').addEventListener('click', (e) => {
+                const sku = e.target.dataset.sku;
+                const price = parseFloat(e.target.dataset.price);
+                const currency = e.target.dataset.currency;
+                const name = e.target.dataset.name;
+                instaBuy({ sku, price, currency, name });
+                closeQuickView();
+            });
+            // Close modal if clicking outside content
+            newModal.addEventListener('click', (e) => {
+                if (e.target === newModal) closeQuickView();
+            });
+        }
+
+        function closeQuickView() {
+            const modal = document.getElementById('quickviewModal');
+            if(modal) modal.remove();
         }
 
         // ─── Cart functions ───
@@ -1002,6 +1124,9 @@
             }
             renderCart();
             updateBadge();
+            orderStatus.textContent = `✅ ${product.name} added to cart!`;
+            orderStatus.style.color = '#88ff88';
+            setTimeout(() => { orderStatus.textContent = ''; }, 3000);
         }
 
         function removeFromCart(sku) {
@@ -1082,6 +1207,37 @@
             checkoutToggle.textContent = checkoutForm.classList.contains('open') ? 'Hide Checkout' : 'Checkout';
         });
 
+        // ─── Insta-Buy Logic ───
+        async function instaBuy(product) {
+            if(!product) return;
+            
+            // Auto-fill the checkout form instantly
+            document.getElementById('firstName').value = 'John';
+            document.getElementById('lastName').value = 'Doe';
+            document.getElementById('addressLine1').value = '123 Main St';
+            document.getElementById('addressLine2').value = '';
+            document.getElementById('city').value = 'Los Angeles';
+            document.getElementById('state').value = 'CA';
+            document.getElementById('postalCode').value = '90001';
+            document.getElementById('country').value = 'US';
+            document.getElementById('phone').value = '555-123-4567';
+            document.getElementById('email').value = 'john@example.com';
+
+            orderStatus.textContent = `⚡ Processing Insta-Buy for ${product.name}...`;
+            orderStatus.style.color = '#ffb7c5';
+
+            // Clear existing cart, add this item, open checkout, and submit.
+            cart = [];
+            addToCart(product);
+            checkoutForm.classList.add('open');
+            checkoutToggle.textContent = 'Hide Checkout';
+            
+            // Click the submit button programmatically after a short delay
+            setTimeout(() => {
+                submitOrderBtn.click();
+            }, 500);
+        }
+
         // ─── Submit order ───
         submitOrderBtn.addEventListener('click', async () => {
             if (cart.length === 0) {
@@ -1144,7 +1300,7 @@
                     body: JSON.stringify(orderData),
                 });
                 orderStatus.textContent = `✅ Order placed! ID: ${result.OrderId || 'success'}`;
-                orderStatus.style.color = '#ffb7c5';
+                orderStatus.style.color = '#88ff88';
                 cart = [];
                 renderCart();
                 updateBadge();
