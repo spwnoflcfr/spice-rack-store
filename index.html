@@ -610,10 +610,12 @@
         /* ─── UPDATED: X (Twitter) Floating Button ─── */
         .x-float {
             position: fixed; bottom: 25px; right: 25px; width: 65px; height: 65px;
-            background: #000000; /* Keeps X branding */
+            background: #ffffff; /* White fill */
             border: 3px solid #ff4d9e; /* Bright pink neon border */
             border-radius: 50%; display: flex; justify-content: center;
-            align-items: center; color: white; font-size: 2rem; text-decoration: none;
+            align-items: center; 
+            color: #000000; /* Black icon for contrast */
+            font-size: 2rem; text-decoration: none;
             box-shadow: 0 0 25px rgba(255, 77, 158, 0.8); /* Strong pink glow */
             transition: 0.3s ease; z-index: 999;
         }
@@ -622,14 +624,20 @@
             box-shadow: 0 0 35px #ff4d9e, 0 0 60px #ffb7c5;
         }
 
-        /* ─── Linktree Floating Button ─── */
+        /* ─── UPDATED: Linktree Floating Button ─── */
         .linktree-float {
             position: fixed; bottom: 25px; left: 25px; width: 65px; height: 65px;
-            background: #39e09e; border-radius: 50%; display: flex; justify-content: center;
+            background: #39e09e; 
+            border: 3px solid #ff4d9e; /* Added matching pink border */
+            border-radius: 50%; display: flex; justify-content: center;
             align-items: center; color: white; font-size: 2rem; text-decoration: none;
-            box-shadow: 0 0 20px rgba(57, 224, 158, 0.6); transition: 0.3s ease; z-index: 999;
+            box-shadow: 0 0 25px rgba(255, 77, 158, 0.8); /* Added matching pink glow */
+            transition: 0.3s ease; z-index: 999;
         }
-        .linktree-float:hover { transform: scale(1.15); }
+        .linktree-float:hover { 
+            transform: scale(1.15); 
+            box-shadow: 0 0 35px #ff4d9e, 0 0 60px #ffb7c5; /* Added matching hover glow */
+        }
 
         /* ─── UPDATED FALLING BACKGROUND ELEMENTS ─── */
         .sakura-container { 
