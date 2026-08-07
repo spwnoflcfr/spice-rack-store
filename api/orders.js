@@ -1,6 +1,8 @@
 // api/orders.js
+import { ratelimit } from './_lib/rate-limit.js';
+
 export default async function handler(req, res) {
-    // 1. CORS / Origin validation
+    // 1. Origin validation
     const allowedOrigins = [
         process.env.FRONTEND_URL || 'https://your-app.vercel.app',
         'http://localhost:3000',
@@ -20,32 +22,31 @@ export default async function handler(req, res) {
 
     // 3. Validate API token
     const clientToken = req.headers['x-api-key'];
-    if (clientToken !== process.env.CLIENT_API_TOKEN) {
+    if (!clientToken || clientToken !== process.env.CLIENT_API_TOKEN) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const recipeId = process.env.GOOTEN_RECIPE_ID;
-    const partnerKey = process.env.GOOTEN_PARTNER_BILLING_KEY;
-
-    if (!recipeId || !partnerKey) {
-        return res.status(500).json({ error: 'Server configuration error' });
+    // 4. Rate limiting (prevent spam)
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+    const { success, reset } = await ratelimit.limit(ip);
+    if (!success) {
+        return res.status(429).json({
+            error: 'Too many requests. Please wait a moment.',
+            reset: new Date(reset).toISOString(),
+        });
     }
 
-    // 4. Input Validation (critical!)
+    // 5. Input validation
     const payload = req.body;
-    
-    // Basic validation: check if ShipToAddress and Items exist
     if (!payload.ShipToAddress || !payload.Items || !Array.isArray(payload.Items) || payload.Items.length === 0) {
         return res.status(400).json({ error: 'Missing ShipToAddress or Items' });
     }
 
-    // Validate required address fields (optional but recommended)
     const addr = payload.ShipToAddress;
     if (!addr.FirstName || !addr.LastName || !addr.Line1 || !addr.City || !addr.State || !addr.PostalCode || !addr.CountryCode) {
         return res.status(400).json({ error: 'Incomplete shipping address' });
     }
 
-    // Validate items: each must have Sku and positive Quantity
     for (const item of payload.Items) {
         if (!item.Sku || typeof item.Sku !== 'string') {
             return res.status(400).json({ error: 'Invalid item SKU' });
@@ -55,7 +56,14 @@ export default async function handler(req, res) {
         }
     }
 
-    // 5. Forward to Gooten
+    // 6. Get environment variables
+    const recipeId = process.env.GOOTEN_RECIPE_ID;
+    const partnerKey = process.env.GOOTEN_PARTNER_BILLING_KEY;
+    if (!recipeId || !partnerKey) {
+        return res.status(500).json({ error: 'Server configuration error' });
+    }
+
+    // 7. Forward to Gooten
     const url = `https://api.print.io/api/orders?recipeId=${recipeId}&partnerBillingKey=${encodeURIComponent(partnerKey)}`;
 
     try {
