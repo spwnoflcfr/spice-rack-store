@@ -623,16 +623,25 @@
         }
         .instagram-float:hover { transform: scale(1.15); }
 
-        .sakura-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        .sakura {
-            position: absolute; top: -50px; width: 15px; height: 15px;
-            background: linear-gradient(135deg, #ff4d9e, #ff66b2);
-            border-radius: 50% 0 50% 50%; opacity: 0.7;
-            animation: fall linear infinite;
+  /* ─── UPDATED FALLING BACKGROUND ELEMENTS ─── */
+        .sakura-container { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            pointer-events: none; 
+            z-index: 1; 
         }
-        .sakura::before { content: ""; position: absolute; width: 100%; height: 100%; background: inherit; border-radius: inherit; transform: rotate(45deg); }
-        @keyframes fall { to { transform: translateY(100vh) rotate(360deg); } }
-        .animated { animation: fadeInUp 1s ease-out; }
+        .sakura {
+            position: absolute; 
+            top: -50px; 
+            /* Removed the geometric CSS shapes, rendering purely via emojis */
+            animation: fall linear infinite;
+            /* Stick to the Milady color theme with drop-shadows */
+            filter: drop-shadow(0 0 10px #ff4d9e) drop-shadow(0 0 2px #ffffff);
+        }
+        @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -754,21 +763,27 @@
 
     <script>
         // ─── SAKURA PETALS ───
+        // ─── FALLING BACKGROUND ELEMENTS (Pills, Syringes, Wine) ───
         function createSakura() {
             const container = document.getElementById('sakuraContainer');
             container.innerHTML = '';
+            // Using emojis for Pill, Syringe/Needle, and Wine Glass
+            const emojis = ['💊', '💉', '🍷'];
             const count = Math.min(30, Math.floor(window.innerWidth / 25));
             for (let i = 0; i < count; i++) {
-                const petal = document.createElement('div');
-                petal.classList.add('sakura');
-                petal.style.left = Math.random() * 100 + 'vw';
-                const size = 5 + Math.random() * 10;
-                petal.style.width = size + 'px';
-                petal.style.height = size + 'px';
-                petal.style.animationDuration = (10 + Math.random() * 20) + 's';
-                petal.style.animationDelay = (Math.random() * 20) + 's';
-                petal.style.opacity = 0.3 + Math.random() * 0.5;
-                container.appendChild(petal);
+                const element = document.createElement('div');
+                element.classList.add('sakura');
+                // Randomly select an emoji
+                element.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                element.style.left = Math.random() * 100 + 'vw';
+                // Vary the font size (20px to 44px)
+                const size = 20 + Math.random() * 24;
+                element.style.fontSize = size + 'px';
+                element.style.animationDuration = (12 + Math.random() * 18) + 's';
+                element.style.animationDelay = (Math.random() * 20) + 's';
+                // Vary opacity from slightly faded to solid
+                element.style.opacity = 0.3 + Math.random() * 0.6;
+                container.appendChild(element);
             }
         }
         document.addEventListener('DOMContentLoaded', createSakura);
