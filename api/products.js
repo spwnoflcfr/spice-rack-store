@@ -1,10 +1,10 @@
 // api/products.js
 export default async function handler(req, res) {
-    // 1. CORS / Origin validation
+    // 1. Origin validation
     const allowedOrigins = [
         process.env.FRONTEND_URL || 'https://your-app.vercel.app',
         'http://localhost:3000',
-        'http://localhost:5173', // for Vite dev
+        'http://localhost:5173',
     ];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
@@ -18,26 +18,26 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    // 3. Validate API token
+    // 3. Validate API token (sent from frontend)
     const clientToken = req.headers['x-api-key'];
-    if (clientToken !== process.env.CLIENT_API_TOKEN) {
+    if (!clientToken || clientToken !== process.env.CLIENT_API_TOKEN) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
 
+    // 4. Get environment variables
     const recipeId = process.env.GOOTEN_RECIPE_ID;
     const partnerKey = process.env.GOOTEN_PARTNER_BILLING_KEY;
-
     if (!recipeId || !partnerKey) {
         return res.status(500).json({ error: 'Server configuration error' });
     }
 
+    // 5. Forward to Gooten
     const url = `https://api.print.io/api/products?recipeId=${recipeId}&partnerBillingKey=${encodeURIComponent(partnerKey)}`;
 
     try {
         const response = await fetch(url);
         const data = await response.json();
         if (!response.ok) {
-            // Sanitize error before sending back
             console.error('Gooten API error:', data);
             return res.status(response.status).json({ error: 'Failed to fetch products' });
         }
