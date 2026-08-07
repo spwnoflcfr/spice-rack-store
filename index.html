@@ -1,196 +1,1165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spice Rack Store</title>
-    <!-- Import Pixel & Clean Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ─── FIX: Allow connections to Gooten API ─── -->
+    <meta http-equiv="Content-Security-Policy" content="connect-src 'self' data: blob: https://api.print.io https://*.print.io;">
+
+    <title>WOOLONG INTERNATIONAL EXCHANGE</title>
+    <link rel="icon" href="https://bafybeiab2kgtb226q5i5vqwsvazn37n675o5zmxr6pwkyhe64jljedvsoe.ipfs.dweb.link?filename=woolong_neologo.jpg" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DotGothic16&display=swap" rel="stylesheet" />
     <style>
-        :root {
-            /* Updated Pastel / Glass Theme Colors */
-            --pink-solid: #ea68a2;
-            --bg-pastel: #fff0f5;
-            --text-dark: #4a3642;
-            --shadow-color: rgba(234, 104, 162, 0.15);
-        }
-
+        /* ── RESET & BASE ── */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-pastel);
-            font-family: 'Quicksand', sans-serif;
-            color: var(--text-dark);
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            position: relative;
+            font-family: 'DotGothic16', sans-serif;
+            background: #0a0a12;
+            color: #ffb7c5;
             overflow-x: hidden;
+            min-height: 100vh;
         }
-
-        /* Cute Sparkle / Star background to match the orb image */
-        body::before {
-            content: '';
+        .crt-effect {
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #1a001a, #000);
+            overflow: hidden;
+        }
+        .crt-effect::before {
+            content: "";
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: radial-gradient(#ffffff 1.5px, transparent 1.5px);
-            background-size: 30px 30px;
-            opacity: 0.6;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
             pointer-events: none;
-            z-index: 0;
+            z-index: 10;
         }
-
-        /* Glassy "Bubble" Container - Light Pastel Theme */
-        .container {
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 800px;
-            padding: 2rem 1rem;
-            margin: 2rem 1rem;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: 40px;
-            box-shadow: 0 15px 35px var(--shadow-color);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 1;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0) 100%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 9;
+            animation: scanline 10s linear infinite;
         }
+        @keyframes scanline { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
 
-        /* 8-bit Pixel Header */
-        h1 {
+        /* ────────── TOP STOREFRONT DRAWER ────────── */
+        .api-trigger {
+            position: fixed;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+            background: linear-gradient(135deg, #ffb7c5, #ff4d9e);
+            border: 2px solid #ffffff;
+            color: #000000;
+            padding: 8px 20px;
             font-family: 'Press Start 2P', cursive;
-            font-size: 1.8rem;
-            line-height: 1.4;
-            margin: 0 0 0.5rem 0;
-            /* Pink Gradient Text */
-            background: linear-gradient(to bottom, #fdb6da, #f6469c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: none;
-            letter-spacing: 2px;
-            word-break: break-word;
+            font-size: 0.7rem;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 77, 158, 0.4);
+            transition: 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 30px;
         }
-
-        h2 {
-            font-family: 'Quicksand', sans-serif;
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: #ce6b95;
-            margin-bottom: 2rem;
-            margin-top: 0;
-            border-bottom: 2px solid #ffb3cc;
-            padding-bottom: 0.5rem;
-            display: inline-block;
-        }
-
-        /* Product Grid */
-        #product-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            width: 100%;
-            margin-bottom: 2rem;
-        }
-
-        /* Product Cards - White and clean */
-        .product-item {
+        .api-trigger:hover {
             background: #ffffff;
-            padding: 1.5rem;
-            border-radius: 25px;
-            border: 1px solid #ffe1ed;
-            box-shadow: 0 4px 12px var(--shadow-color);
-            transition: all 0.3s ease;
+            color: #ff4d9e;
+            box-shadow: 0 0 35px #ffffff;
+        }
+        .api-trigger .badge {
+            background: #000000;
+            color: #ffffff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'DotGothic16', sans-serif;
+            animation: pulse-badge 1.5s infinite;
+        }
+        @keyframes pulse-badge {
+            0% { opacity: 0.6; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.6; transform: scale(0.9); }
+        }
+
+        .api-drawer {
+            position: fixed;
+            top: -80vh;
+            left: 0;
+            width: 100%;
+            height: 70vh;
+            z-index: 150;
+            background: rgba(10, 10, 18, 0.96);
+            border-bottom: 4px solid #ff4d9e;
+            box-shadow: 0 15px 60px rgba(255, 77, 158, 0.2);
+            transition: top 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            padding: 20px 30px;
+            overflow-y: auto;
+            backdrop-filter: blur(6px);
+            display: flex;
+            flex-direction: column;
+        }
+        .api-drawer.open { top: 0; }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ff4d9e;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+            flex-shrink: 0;
+        }
+        .drawer-header h2 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9rem;
+            color: #ff4d9e;
+            text-shadow: 0 0 10px #ff4d9e;
+            letter-spacing: 2px;
+        }
+        .drawer-header h2 i { margin-right: 8px; }
+        .drawer-close {
+            background: none;
+            border: none;
+            color: #ff007f;
+            font-size: 1.8rem;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            transition: 0.2s;
+        }
+        .drawer-close:hover { transform: rotate(90deg); color: #ffb7c5; }
+
+        .storefront-body {
+            flex: 1;
+            display: flex;
+            gap: 20px;
+            overflow: hidden;
+            min-height: 0;
+        }
+        .product-grid {
+            flex: 2;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+            padding-right: 8px;
+        }
+        .product-grid::-webkit-scrollbar { width: 4px; }
+        .product-grid::-webkit-scrollbar-track { background: #1a001a; }
+        .product-grid::-webkit-scrollbar-thumb { background: #ff4d9e; border-radius: 4px; }
+
+        .product-card {
+            background: rgba(30, 0, 20, 0.5);
+            border: 2px solid #ff4d9e;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            transition: 0.2s;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.8rem;
         }
-
-        .product-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px var(--shadow-color);
-            border-color: #fbaac2;
-        }
-
-        .product-item h3 {
-            font-size: 1.1rem;
-            margin: 0;
-            color: var(--text-dark);
-        }
-
-        .product-item p {
-            margin: 0;
-            font-size: 0.9rem;
-            color: #7a5a6b;
-        }
-
-        /* Solid Pink "MiladySpice" Bottom Banner Style */
-        .btn-buy {
-            background-color: var(--pink-solid);
-            color: #ffffff;
-            border: none;
-            padding: 0.8rem 1.8rem;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: 'Quicksand', sans-serif;
+        .product-card:hover { border-color: #ffffff; box-shadow: 0 0 20px rgba(255, 255, 255, 0.15); }
+        .product-card img {
             width: 100%;
-            max-width: 180px;
-            box-shadow: 0 4px 12px rgba(234, 104, 162, 0.3);
+            max-height: 100px;
+            object-fit: contain;
+            border-radius: 4px;
+            background: #1a001a;
+            margin-bottom: 6px;
+        }
+        .product-card .no-image {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: #663366;
+            background: #1a001a;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+        .product-card .name {
+            font-size: 0.6rem;
+            color: #ffd1dc;
+            font-family: 'DotGothic16', sans-serif;
+            margin-bottom: 2px;
+            word-break: break-word;
+            line-height: 1.3;
+            min-height: 2.2em;
+        }
+        .product-card .sku-label {
+            font-size: 0.5rem;
+            color: #a0337a;
+            font-family: 'DotGothic16', sans-serif;
+            opacity: 0.6;
+            margin-bottom: 4px;
+        }
+        .product-card .price {
+            font-size: 0.8rem;
+            color: #ffffff;
+            font-family: 'Press Start 2P', cursive;
+            margin: 4px 0;
+        }
+        .product-card .add-btn {
+            background: #ff4d9e;
+            color: #000;
+            border: none;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: auto;
+        }
+        .product-card .add-btn:hover { background: #ffffff; box-shadow: 0 0 12px #ffffff; }
+        .product-card .add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .product-card .loading-placeholder {
+            width: 100%;
+            height: 80px;
+            background: rgba(255, 77, 158, 0.05);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #663366;
+            font-size: 0.6rem;
+            font-family: 'Press Start 2P', cursive;
+            animation: pulse-loading 1.5s infinite;
+        }
+        @keyframes pulse-loading {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
         }
 
-        .btn-buy:hover {
-            transform: scale(1.03);
-            opacity: 0.9;
-            box-shadow: 0 6px 16px rgba(234, 104, 162, 0.4);
+        /* ── Cart sidebar ── */
+        .cart-sidebar {
+            flex: 1;
+            min-width: 200px;
+            max-width: 280px;
+            background: rgba(30, 0, 20, 0.6);
+            border: 2px solid #ff4d9e;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
+        .cart-sidebar h3 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            color: #ffb7c5;
+            border-bottom: 1px solid #ff4d9e;
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            margin: 8px 0;
+            font-size: 0.65rem;
+        }
+        .cart-items::-webkit-scrollbar { width: 3px; }
+        .cart-items::-webkit-scrollbar-track { background: #1a001a; }
+        .cart-items::-webkit-scrollbar-thumb { background: #ff4d9e; border-radius: 3px; }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 77, 158, 0.1);
+            gap: 4px;
+        }
+        .cart-item .name { flex: 1; color: #ffd1dc; font-size: 0.55rem; word-break: break-word; }
+        .cart-item .qty { display: flex; gap: 3px; align-items: center; }
+        .cart-item .qty button {
+            background: none;
+            border: 1px solid #ff4d9e;
+            color: #ff4d9e;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            font-size: 0.6rem;
+            border-radius: 3px;
+            font-family: 'Press Start 2P', cursive;
+        }
+        .cart-item .qty button:hover { background: #ff4d9e; color: #000; }
+        .cart-item .price { color: #ffffff; margin-left: 4px; font-size: 0.6rem; }
+        .cart-item .remove-btn {
+            background: none;
+            border: none;
+            color: #ff007f;
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 0 4px;
+        }
+
+        .cart-total {
+            border-top: 2px solid #ff4d9e;
+            padding-top: 8px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: space-between;
+            color: #ffb7c5;
+        }
+        .checkout-btn {
+            background: #ff4d9e;
+            color: #000;
+            border: none;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.6rem;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 8px;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .checkout-btn:hover { background: #ffffff; box-shadow: 0 0 12px #ffffff; }
+        .checkout-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .checkout-form {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+            border-top: 2px solid #ff4d9e;
+            padding-top: 10px;
+        }
+        .checkout-form.open { display: flex; }
+        .checkout-form input {
+            background: #1a001a;
+            border: 1px solid #ff4d9e;
+            color: #ffb7c5;
+            padding: 5px 8px;
+            font-family: 'DotGothic16', sans-serif;
+            font-size: 0.65rem;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .checkout-form input::placeholder { color: #663366; }
+        .checkout-form .form-row { display: flex; gap: 6px; }
+        .checkout-form .form-row input { flex: 1; }
+        .checkout-form .submit-order {
+            background: #ff007f;
+            color: #fff;
+            border: none;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.55rem;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+        .checkout-form .submit-order:hover { background: #ffb7c5; box-shadow: 0 0 15px #ffb7c5; }
+        .checkout-form .submit-order:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .order-status {
+            margin-top: 6px;
+            font-size: 0.65rem;
+            color: #ffb7c5;
+            text-align: center;
+            min-height: 1.5em;
+        }
+
+        /* ── Mobile ── */
+        @media (max-width: 768px) {
+            .storefront-body { flex-direction: column; overflow-y: auto; }
+            .cart-sidebar { max-width: none; min-width: 0; flex: none; max-height: 200px; }
+            .product-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); max-height: 300px; }
+            .api-drawer {
+                top: auto;
+                bottom: -85vh;
+                height: 80vh;
+                border-bottom: none;
+                border-top: 4px solid #ff4d9e;
+                transition: bottom 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+                border-radius: 20px 20px 0 0;
+                padding: 20px 20px 30px;
+            }
+            .api-drawer.open { top: auto; bottom: 0; }
+            .drawer-header h2 { font-size: 0.7rem; }
+            .api-trigger { font-size: 0.5rem; padding: 5px 14px; gap: 8px; top: 4px; }
+            .api-trigger .badge { width: 16px; height: 16px; font-size: 0.4rem; }
+            .cart-item .name { font-size: 0.5rem; }
+        }
+        @media (max-width: 420px) {
+            .product-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        .mobile-drawer-handle {
+            display: none;
+            position: fixed;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            z-index: 150;
+            justify-content: center;
+            padding: 5px 0;
+            pointer-events: none;
+        }
+        .mobile-drawer-handle .handle-bar {
+            width: 60px;
+            height: 6px;
+            background: #ff4d9e;
+            border-radius: 20px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        @media (max-width: 768px) {
+            .mobile-drawer-handle { display: flex; pointer-events: none; }
+        }
+
+        /* ────────── SIDE DRAWERS ────────── */
+        .side-drawer-trigger {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 200;
+            background: #1a001a;
+            border: 2px solid #ff4d9e;
+            color: #ff4d9e;
+            padding: 12px 8px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 77, 158, 0.2);
+            transition: 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            border-radius: 8px 0 0 8px;
+            writing-mode: vertical-rl;
+            letter-spacing: 2px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.6rem;
+        }
+        .side-drawer-trigger:hover {
+            background: #ff4d9e;
+            color: #000;
+            box-shadow: 0 0 35px #ff4d9e;
+        }
+        .side-drawer-trigger i { font-size: 1.2rem; margin-bottom: 4px; }
+
+        #discordTrigger { left: 0; border-radius: 0 12px 12px 0; border-left: none; }
+        #spotifyTrigger { right: 0; border-radius: 12px 0 0 12px; border-right: none; }
+
+        .side-drawer {
+            position: fixed;
+            top: 0;
+            height: 100%;
+            width: 380px;
+            z-index: 160;
+            background: rgba(10, 10, 18, 0.96);
+            backdrop-filter: blur(8px);
+            padding: 20px 20px 30px;
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 0 40px rgba(255, 77, 158, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        .side-drawer.left { left: 0; transform: translateX(-105%); border-right: 4px solid #ff4d9e; }
+        .side-drawer.right { right: 0; transform: translateX(105%); border-left: 4px solid #ff4d9e; }
+        .side-drawer.open { transform: translateX(0); }
+
+        .side-drawer .drawer-header {
+            border-bottom-color: #ff4d9e;
+            flex-shrink: 0;
+        }
+        .side-drawer .drawer-header h2 {
+            font-size: 0.8rem;
+            color: #ffb7c5;
+        }
+        .side-drawer .drawer-header .drawer-close {
+            color: #ff007f;
+            font-size: 1.5rem;
+        }
+
+        .side-drawer .widget-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        .side-drawer .widget-container iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+            border-radius: 12px;
+            border: none;
+            background: transparent;
+        }
+
+        @media (max-width: 768px) {
+            .side-drawer { width: 100%; max-width: 100%; padding: 15px; }
+            .side-drawer .widget-container iframe { min-height: 300px; }
+            .side-drawer-trigger { padding: 8px 6px; font-size: 0.5rem; }
+            .side-drawer-trigger i { font-size: 1rem; }
+        }
+
+        /* ── Original site styles ── */
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; position: relative; z-index: 5; }
+        .pixel-border {
+            border: 4px solid #ff4d9e;
+            position: relative;
+            margin: 50px auto 20px auto;
+            max-width: 900px;
+            box-shadow: 0 0 10px #ff4d9e, inset 0 0 10px #ff4d9e;
+            background: rgba(20, 0, 15, 0.7);
+        }
+        .pixel-border::before, .pixel-border::after {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff4d9e;
+        }
+        .pixel-border::before { top: -4px; left: -4px; }
+        .pixel-border::after { bottom: -4px; right: -4px; }
+        .content { padding: 30px 20px; text-align: center; }
+        .logo-link { text-decoration: none; }
+        .logo {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(1.2rem, 4vw, 2.2rem);
+            margin-bottom: 10px;
+            color: #ff4d9e;
+            text-shadow: 0 0 10px #ff4d9e;
+            line-height: 1.4;
+            display: block;
+        }
+        .glitch {
+            position: relative;
+            display: inline-block;
+            color: #ff4d9e;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .glitch::before { left: 2px; text-shadow: -2px 0 #00ffff; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse; }
+        .glitch::after { left: -2px; text-shadow: -2px 0 #ff007f; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim2 5s infinite linear alternate-reverse; }
+        @keyframes glitch-anim { 0% { clip: rect(42px, 9999px, 44px, 0); } 100% { clip: rect(4px, 9999px, 91px, 0); } }
+        @keyframes glitch-anim2 { 0% { clip: rect(65px, 9999px, 100px, 0); } 100% { clip: rect(38px, 9999px, 49px, 0); } }
+        .subtitle { font-size: clamp(0.8rem, 2.5vw, 1.2rem); margin-bottom: 30px; color: #ff99cc; }
+        .project-box {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #ff4d9e;
+            background: rgba(20, 0, 15, 0.3);
+            position: relative;
+        }
+        .project-box::before { content: ">>"; position: absolute; left: 10px; top: 10px; color: #ff4d9e; }
+        .project-box::after { content: "<<"; position: absolute; right: 10px; bottom: 10px; color: #ff4d9e; }
+        .project-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 0 0 5px #ffffff;
+        }
+        .buttons-container { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 15px; }
+        .cta-button {
+            background: #ff4d9e;
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.6rem, 2vw, 0.8rem);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 180px;
+        }
+        .cta-button:hover { background: #ffffff; color: #000; box-shadow: 0 0 10px #ffffff; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ff4d9e; font-size: clamp(0.6rem, 2vw, 0.8rem); color: #ff99cc; }
+
+        .telegram-float {
+            position: fixed; bottom: 25px; right: 25px; width: 65px; height: 65px;
+            background: #0088cc; border-radius: 50%; display: flex; justify-content: center;
+            align-items: center; color: white; font-size: 2rem; text-decoration: none;
+            box-shadow: 0 0 20px rgba(0, 136, 204, 0.6); transition: 0.3s ease; z-index: 999;
+        }
+        .telegram-float:hover { transform: scale(1.15); }
+        .instagram-float {
+            position: fixed; bottom: 25px; left: 25px; width: 65px; height: 65px;
+            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            color: white; font-size: 2rem; text-decoration: none;
+            box-shadow: 0 0 20px rgba(225, 48, 108, 0.6); transition: 0.3s ease; z-index: 999;
+        }
+        .instagram-float:hover { transform: scale(1.15); }
+
+        .sakura-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .sakura {
+            position: absolute; top: -50px; width: 15px; height: 15px;
+            background: linear-gradient(135deg, #ff4d9e, #ff66b2);
+            border-radius: 50% 0 50% 50%; opacity: 0.7;
+            animation: fall linear infinite;
+        }
+        .sakura::before { content: ""; position: absolute; width: 100%; height: 100%; background: inherit; border-radius: inherit; transform: rotate(45deg); }
+        @keyframes fall { to { transform: translateY(100vh) rotate(360deg); } }
+        .animated { animation: fadeInUp 1s ease-out; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
+    <div class="crt-effect">
+        <div class="scanlines"></div>
+        <div class="sakura-container" id="sakuraContainer"></div>
 
-    <div class="container">
-        <!-- Pixelated Pink Title -->
-        <h1>SPICE RACK STORE</h1>
-        
-        <!-- Subtitle -->
-        <h2>~ Milady Approved Spices ~</h2>
+        <!-- ─── STORE TRIGGER ─── -->
+        <button class="api-trigger" id="apiTrigger">
+            <i class="fas fa-store"></i> Store
+            <span class="badge" id="cartBadge">0</span>
+        </button>
 
-        <!-- Your Existing Product Container -->
-        <div id="product-container">
-            <div class="product-item">
-                <h3>Paprika</h3>
-                <p>Smoky & Sweet</p>
-                <button class="btn-buy">Add to Cart</button>
+        <!-- ─── STOREFRONT DRAWER ─── -->
+        <div class="api-drawer" id="apiDrawer">
+            <div class="mobile-drawer-handle"><div class="handle-bar"></div></div>
+            <div class="drawer-header">
+                <h2><i class="fas fa-store-alt"></i> GOOTEN SHOP</h2>
+                <button class="drawer-close" id="drawerClose">✕</button>
             </div>
-            <div class="product-item">
-                <h3>Cinnamon</h3>
-                <p>Warm & Spicy</p>
-                <button class="btn-buy">Add to Cart</button>
-            </div>
-            <div class="product-item">
-                <h3>Garlic Powder</h3>
-                <p>Savory Kick</p>
-                <button class="btn-buy">Add to Cart</button>
+            <div class="storefront-body">
+                <div class="product-grid" id="productGrid">
+                    <div style="grid-column:1/-1; text-align:center; padding:30px; color:#ffb7c5;">
+                        <div style="font-family:'Press Start 2P',cursive; font-size:0.7rem;">Loading products...</div>
+                        <div style="margin-top:10px; font-size:0.5rem; color:#663366;">⏳ Fetching from Gooten API</div>
+                    </div>
+                </div>
+
+                <div class="cart-sidebar" id="cartSidebar">
+                    <h3><span>🛒 Cart</span><span id="cartCount">0</span></h3>
+                    <div class="cart-items" id="cartItems">
+                        <div style="color:#663366; text-align:center; padding:10px 0;">Your cart is empty</div>
+                    </div>
+                    <div class="cart-total">
+                        <span>Total</span>
+                        <span id="cartTotal">$0.00</span>
+                    </div>
+                    <button class="checkout-btn" id="checkoutToggle">Checkout</button>
+
+                    <div class="checkout-form" id="checkoutForm">
+                        <div class="form-row">
+                            <input type="text" id="firstName" placeholder="First Name" value="John" />
+                            <input type="text" id="lastName" placeholder="Last Name" value="Doe" />
+                        </div>
+                        <div class="form-row">
+                            <input type="text" id="addressLine1" placeholder="Address Line 1" value="123 Main St" />
+                            <input type="text" id="addressLine2" placeholder="Address Line 2" />
+                        </div>
+                        <div class="form-row">
+                            <input type="text" id="city" placeholder="City" value="Los Angeles" />
+                            <input type="text" id="state" placeholder="State" value="CA" />
+                        </div>
+                        <div class="form-row">
+                            <input type="text" id="postalCode" placeholder="Postal Code" value="90001" />
+                            <input type="text" id="country" placeholder="Country" value="US" />
+                        </div>
+                        <div class="form-row">
+                            <input type="text" id="phone" placeholder="Phone" value="555-123-4567" />
+                            <input type="email" id="email" placeholder="Email" value="john@example.com" />
+                        </div>
+                        <button class="submit-order" id="submitOrderBtn">Place Order</button>
+                        <div class="order-status" id="orderStatus"></div>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <!-- Bottom pink bar (Updated inline style to hardcode pink and white text) -->
-        <div style="width: 100%; background-color: #ea68a2; color: #ffffff; padding: 1rem 0; margin-top: 1rem; border-radius: 0 0 30px 30px;">
-            <p style="margin: 0; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px;">MiladySpice</p>
+
+        <!-- ─── SIDE DRAWERS ─── -->
+        <button class="side-drawer-trigger" id="discordTrigger">
+            <i class="fab fa-discord"></i> DISCORD
+        </button>
+        <button class="side-drawer-trigger" id="spotifyTrigger">
+            <i class="fab fa-spotify"></i> SPOTIFY
+        </button>
+
+        <div class="side-drawer left" id="discordDrawer">
+            <div class="drawer-header">
+                <h2><i class="fab fa-discord" style="color:#5865F2;"></i> DISCORD COMMUNITY</h2>
+                <button class="drawer-close" id="discordClose">✕</button>
+            </div>
+            <div class="widget-container">
+                <iframe src="https://ptb.discord.com/widget?id=1534258707108728974&theme=dark" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts" loading="lazy"></iframe>
+            </div>
+        </div>
+
+        <div class="side-drawer right" id="spotifyDrawer">
+            <div class="drawer-header">
+                <h2><i class="fab fa-spotify" style="color:#1db954;"></i> SPOTIFY PLAYLIST</h2>
+                <button class="drawer-close" id="spotifyClose">✕</button>
+            </div>
+            <div class="widget-container">
+                <iframe data-testid="embed-iframe" src="https://open.spotify.com/embed/playlist/08ioT5PkT8A9h7JGyxWAj1?utm_source=generator" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+        </div>
+
+        <!-- ─── MAIN SITE ─── -->
+        <div class="container">
+            <div class="pixel-border">
+                <div class="content animated">
+                    <a href="https://wie.neocities.org/plinko/" class="logo-link">
+                        <h1 class="logo">WOOLONG<span class="glitch" data-text="INTERNATIONAL">INTERNATIONAL</span> EXCHANGE</h1>
+                    </a>
+                    <div class="subtitle"><a href="https://wie.neocities.org/cyberdeck">「 為替で世界をつなぐ 」</a></div>
+
+                    <div class="project-box"><h2 class="project-title">McGeeverse <span>in SPACE!</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/mcgeeverse" class="cta-button"><i class="fas fa-external-link-alt"></i>McGee</a></div></div>
+                    <div class="project-box"><h2 class="project-title">Sadskullz <span>the Crypt</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/SSz" class="cta-button"><i class="fas fa-external-link-alt"></i>BOO!</a></div></div>
+                    <div class="project-box"><h2 class="project-title">LORE <span>for EVERYTHING!</span></h2><div class="buttons-container"><a href="https://paragraph.com/@the-tempest" class="cta-button"><i class="fas fa-external-link-alt"></i>LORE</a></div></div>
+                    <div class="project-box"><h2 class="project-title">Merch <span>for Space Travel!</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/merch" class="cta-button"><i class="fas fa-external-link-alt"></i>Merch</a></div></div>
+                    <div class="project-box"><h2 class="project-title">buddiez <span>on CHAIN!</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/buddiez" class="cta-button"><i class="fas fa-external-link-alt"></i>Smoke em...</a></div></div>
+                    <div class="project-box"><h2 class="project-title">Purple People Eater <span>on Monad</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/PPE" class="cta-button"><i class="fas fa-external-link-alt"></i>Eat Here</a></div></div>
+                    <div class="project-box"><h2 class="project-title">Bug Warz <span>on Earth?</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/bugwarz" class="cta-button"><i class="fas fa-external-link-alt"></i>Join the Ranks</a></div></div>
+                    <div class="project-box"><h2 class="project-title">McLoot <span>on EVERYWHERE</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/mclt" class="cta-button"><i class="fas fa-external-link-alt"></i>#McLoot</a></div></div>
+                    <div class="project-box"><h2 class="project-title">Wub157<span>on the blockchain!</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/wub157" class="cta-button"><i class="fas fa-external-link-alt"></i>Wubba Lubba</a></div></div>
+                    <div class="project-box"><h2 class="project-title">Cigawrette Packs 2 <span>on BASE.</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/CP2" class="cta-button"><i class="fas fa-external-link-alt"></i>Smoke Break</a></div></div>
+                    <div class="project-box"><h2 class="project-title">Gummy Chimp <span>in the Jungle.</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/gummychimp" class="cta-button"><i class="fas fa-external-link-alt"></i>OOAA!!</a></div></div>
+                    <div class="project-box"><h2 class="project-title">Monad Pilled <span>on Monad.</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/PILLED" class="cta-button"><i class="fas fa-external-link-alt"></i>Wake Up Neo!</a></div></div>
+                    <div class="project-box"><h2 class="project-title">Midlady <span>Beach EP1.</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/beach_episode" class="cta-button"><i class="fas fa-external-link-alt"></i>Fun in da sun.</a></div></div>
+
+                    <div class="footer"><p>© 2024 WOOLONG INTERNATIONAL EXCHANGE. ALL RIGHTS RESERVED.</p></div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Telegram & Instagram -->
+    <a href="https://t.me/mcgeeversev1" class="telegram-float" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+    <a href="https://www.instagram.com/tempest.369/" class="instagram-float" target="_blank"><i class="fab fa-instagram"></i></a>
+
+    <script>
+        // ─── SAKURA PETALS ───
+        function createSakura() {
+            const container = document.getElementById('sakuraContainer');
+            container.innerHTML = '';
+            const count = Math.min(30, Math.floor(window.innerWidth / 25));
+            for (let i = 0; i < count; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('sakura');
+                petal.style.left = Math.random() * 100 + 'vw';
+                const size = 5 + Math.random() * 10;
+                petal.style.width = size + 'px';
+                petal.style.height = size + 'px';
+                petal.style.animationDuration = (10 + Math.random() * 20) + 's';
+                petal.style.animationDelay = (Math.random() * 20) + 's';
+                petal.style.opacity = 0.3 + Math.random() * 0.5;
+                container.appendChild(petal);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', createSakura);
+        window.addEventListener('resize', createSakura);
+
+        // ─── GOOTEN API CONFIG ───
+        const RECIPE_ID = '7bfd3d48-97c6-4450-a188-9c3289946be1';
+        const PARTNER_BILLING_KEY_RAW = '0AF5+RRxmfSDp8rDQa7fQMc2RU1Mq6Z34j2eY4c0G1c=';
+        const PARTNER_BILLING_KEY_ENCODED = encodeURIComponent(PARTNER_BILLING_KEY_RAW);
+
+        // ─── YOUR PRODUCT SKUs (from screenshot) ───
+        const PRODUCT_SKUS = [
+            { sku: 'CarMagnet_3x11.5', partnerSku: 'CarMagnet_3x11.5-20260802191253200', price: 12.99, currency: 'USD' },
+            { sku: 'AcrylicSquareMagnet-2.5x2.5', partnerSku: 'AcrylicSquareMagnet-2.5x2.5-20260802190601379', price: 9.99, currency: 'USD' },
+            { sku: 'FlatCard-4x8-McCoy-Single-10Pack', partnerSku: 'FlatCard-4x8-McCoy-Single-10Pack-20260801232251786', price: 24.99, currency: 'USD' },
+            { sku: 'FlatCard-4x8-McCoy-Single-1Pack', partnerSku: 'FlatCard-4x8-McCoy-Single-1Pack-20260801232251787', price: 4.99, currency: 'USD' },
+            { sku: 'FlatCard-4x8-McCoy-Single-5Pack', partnerSku: 'FlatCard-4x8-McCoy-Single-5Pack-20260801232251786', price: 14.99, currency: 'USD' },
+            { sku: 'Flask-8oz', partnerSku: 'Flask-8oz-20260802190322995', price: 19.99, currency: 'USD' },
+            { sku: 'ShotGlass-1.5oz', partnerSku: 'ShotGlass-1.5oz-20260802000502901', price: 7.99, currency: 'USD' },
+        ];
+
+        // ─── DOM refs ───
+        const apiTrigger = document.getElementById('apiTrigger');
+        const apiDrawer = document.getElementById('apiDrawer');
+        const apiClose = document.getElementById('drawerClose');
+        const productGrid = document.getElementById('productGrid');
+        const cartItems = document.getElementById('cartItems');
+        const cartCount = document.getElementById('cartCount');
+        const cartTotal = document.getElementById('cartTotal');
+        const cartBadge = document.getElementById('cartBadge');
+        const checkoutToggle = document.getElementById('checkoutToggle');
+        const checkoutForm = document.getElementById('checkoutForm');
+        const submitOrderBtn = document.getElementById('submitOrderBtn');
+        const orderStatus = document.getElementById('orderStatus');
+
+        // ─── State ───
+        let cart = [];
+        let productCatalog = null; // cached catalog
+        let isFetching = false;
+
+        // ─── Drawer toggle ───
+        function toggleTopDrawer() {
+            apiDrawer.classList.toggle('open');
+            if (apiDrawer.classList.contains('open')) {
+                if (!productCatalog && !isFetching) {
+                    fetchProductCatalog();
+                } else if (productCatalog) {
+                    renderProducts();
+                }
+            }
+        }
+        apiTrigger.addEventListener('click', toggleTopDrawer);
+        apiClose.addEventListener('click', toggleTopDrawer);
+
+        // ─── Side drawers ───
+        const discordTrigger = document.getElementById('discordTrigger');
+        const discordDrawer = document.getElementById('discordDrawer');
+        const discordClose = document.getElementById('discordClose');
+        const spotifyTrigger = document.getElementById('spotifyTrigger');
+        const spotifyDrawer = document.getElementById('spotifyDrawer');
+        const spotifyClose = document.getElementById('spotifyClose');
+
+        function toggleDiscord() { discordDrawer.classList.toggle('open'); }
+        function toggleSpotify() { spotifyDrawer.classList.toggle('open'); }
+        discordTrigger.addEventListener('click', toggleDiscord);
+        discordClose.addEventListener('click', toggleDiscord);
+        spotifyTrigger.addEventListener('click', toggleSpotify);
+        spotifyClose.addEventListener('click', toggleSpotify);
+
+        document.addEventListener('click', (e) => {
+            if (discordDrawer.classList.contains('open') && !discordDrawer.contains(e.target) && !discordTrigger.contains(e.target)) {
+                discordDrawer.classList.remove('open');
+            }
+            if (spotifyDrawer.classList.contains('open') && !spotifyDrawer.contains(e.target) && !spotifyTrigger.contains(e.target)) {
+                spotifyDrawer.classList.remove('open');
+            }
+        });
+
+        // ─── API helper ───
+        async function gootenFetch(endpoint, options = {}) {
+            const separator = endpoint.includes('?') ? '&' : '?';
+            const url = `${endpoint}${separator}recipeId=${RECIPE_ID}&partnerBillingKey=${PARTNER_BILLING_KEY_ENCODED}`;
+            const response = await fetch(url, {
+                ...options,
+                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            return response.json();
+        }
+
+        // ─── Fetch product catalog from API ───
+        async function fetchProductCatalog() {
+            if (isFetching) return;
+            isFetching = true;
+            productGrid.innerHTML = `
+                <div style="grid-column:1/-1; text-align:center; padding:30px; color:#ffb7c5;">
+                    <div style="font-family:'Press Start 2P',cursive; font-size:0.7rem;">Loading products...</div>
+                    <div style="margin-top:10px; font-size:0.5rem; color:#663366;">⏳ Fetching from Gooten API</div>
+                </div>
+            `;
+
+            try {
+                // Fetch product catalog from Gooten
+                const data = await gootenFetch('https://api.print.io/api/products');
+                
+                // Build a map: SKU -> { name, imageUrl }
+                const catalog = {};
+                if (data && data.Items) {
+                    data.Items.forEach(item => {
+                        const sku = item.Sku || '';
+                        const name = item.Name || sku;
+                        const imageUrl = item.Images && item.Images.length > 0 ? item.Images[0].Url : null;
+                        catalog[sku] = { name, imageUrl };
+                    });
+                }
+                productCatalog = catalog;
+                renderProducts();
+            } catch (error) {
+                console.error('Error fetching product catalog:', error);
+                productGrid.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:30px; color:#ff007f;">
+                        <div style="font-family:'Press Start 2P',cursive; font-size:0.7rem;">⚠ Failed to load products</div>
+                        <div style="margin-top:8px; font-size:0.5rem; color:#884444;">${error.message}</div>
+                        <button onclick="fetchProductCatalog()" style="margin-top:12px; background:#ff4d9e; color:#000; border:none; font-family:'Press Start 2P',cursive; font-size:0.5rem; padding:8px 16px; cursor:pointer; border-radius:4px;">Retry</button>
+                    </div>
+                `;
+            } finally {
+                isFetching = false;
+            }
+        }
+
+        // ─── Render products ───
+        function renderProducts() {
+            if (!productCatalog) {
+                productGrid.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:30px; color:#ffb7c5;">
+                        <div style="font-family:'Press Start 2P',cursive; font-size:0.7rem;">Loading products...</div>
+                        <div style="margin-top:10px; font-size:0.5rem; color:#663366;">⏳ Fetching from Gooten API</div>
+                    </div>
+                `;
+                return;
+            }
+
+            if (!PRODUCT_SKUS.length) {
+                productGrid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px; color:#ffb7c5;">No products available.</div>';
+                return;
+            }
+
+            productGrid.innerHTML = '';
+            PRODUCT_SKUS.forEach((product) => {
+                // Look up product details from catalog
+                const catalogItem = productCatalog[product.sku];
+                const displayName = catalogItem?.name || product.sku;
+                const imageUrl = catalogItem?.imageUrl || null;
+                const displaySku = product.partnerSku || product.sku;
+
+                const card = document.createElement('div');
+                card.className = 'product-card';
+
+                let imageHtml = '';
+                if (imageUrl) {
+                    imageHtml = `<img src="${imageUrl}" alt="${displayName}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="no-image" style="display:none;"><i class="fas fa-cube"></i></div>`;
+                } else {
+                    imageHtml = `<div class="no-image"><i class="fas fa-cube"></i></div>`;
+                }
+
+                card.innerHTML = `
+                    ${imageHtml}
+                    <div class="name">${displayName}</div>
+                    <div class="sku-label">SKU: ${displaySku}</div>
+                    <div class="price">$${product.price.toFixed(2)} ${product.currency}</div>
+                    <button class="add-btn" data-sku="${product.sku}" data-price="${product.price}" data-currency="${product.currency}" data-name="${displayName}">Add to Cart</button>
+                `;
+                productGrid.appendChild(card);
+            });
+
+            // Attach event listeners
+            document.querySelectorAll('.add-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const sku = btn.dataset.sku;
+                    const price = parseFloat(btn.dataset.price);
+                    const currency = btn.dataset.currency;
+                    const name = btn.dataset.name;
+                    addToCart({ sku, price, currency, name });
+                });
+            });
+        }
+
+        // ─── Cart functions ───
+        function addToCart(product) {
+            const existing = cart.find(item => item.sku === product.sku);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            renderCart();
+            updateBadge();
+        }
+
+        function removeFromCart(sku) {
+            cart = cart.filter(item => item.sku !== sku);
+            renderCart();
+            updateBadge();
+        }
+
+        function changeQuantity(sku, delta) {
+            const item = cart.find(i => i.sku === sku);
+            if (!item) return;
+            item.quantity += delta;
+            if (item.quantity <= 0) {
+                removeFromCart(sku);
+            } else {
+                renderCart();
+                updateBadge();
+            }
+        }
+
+        function renderCart() {
+            if (!cart.length) {
+                cartItems.innerHTML = '<div style="color:#663366; text-align:center; padding:10px 0;">Your cart is empty</div>';
+                cartTotal.textContent = '$0.00';
+                cartCount.textContent = '0';
+                return;
+            }
+            let html = '';
+            let total = 0;
+            cart.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+                html += `
+                    <div class="cart-item">
+                        <span class="name">${item.name || item.sku}</span>
+                        <div class="qty">
+                            <button data-sku="${item.sku}" data-delta="-1">−</button>
+                            <span>${item.quantity}</span>
+                            <button data-sku="${item.sku}" data-delta="1">+</button>
+                        </div>
+                        <span class="price">${(item.price * item.quantity).toFixed(2)}</span>
+                        <button class="remove-btn" data-sku="${item.sku}">✕</button>
+                    </div>
+                `;
+            });
+            cartItems.innerHTML = html;
+            cartTotal.textContent = `${total.toFixed(2)} ${cart[0]?.currency || 'USD'}`;
+            cartCount.textContent = cart.reduce((sum, i) => sum + i.quantity, 0);
+
+            document.querySelectorAll('.qty button').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const sku = btn.dataset.sku;
+                    const delta = parseInt(btn.dataset.delta);
+                    changeQuantity(sku, delta);
+                });
+            });
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    removeFromCart(btn.dataset.sku);
+                });
+            });
+        }
+
+        function updateBadge() {
+            const count = cart.reduce((sum, i) => sum + i.quantity, 0);
+            cartBadge.textContent = count;
+            cartBadge.style.background = count > 0 ? '#ffffff' : '#000000';
+        }
+
+        // ─── Checkout toggle ───
+        checkoutToggle.addEventListener('click', () => {
+            if (cart.length === 0) {
+                orderStatus.textContent = '⚠ Your cart is empty.';
+                orderStatus.style.color = '#ff007f';
+                return;
+            }
+            checkoutForm.classList.toggle('open');
+            checkoutToggle.textContent = checkoutForm.classList.contains('open') ? 'Hide Checkout' : 'Checkout';
+        });
+
+        // ─── Submit order ───
+        submitOrderBtn.addEventListener('click', async () => {
+            if (cart.length === 0) {
+                orderStatus.textContent = '⚠ Cart is empty.';
+                orderStatus.style.color = '#ff007f';
+                return;
+            }
+
+            const getVal = (id) => document.getElementById(id).value.trim() || 'N/A';
+            const firstName = getVal('firstName');
+            const lastName = getVal('lastName');
+            const line1 = getVal('addressLine1');
+            const line2 = getVal('addressLine2') || '';
+            const city = getVal('city');
+            const state = getVal('state');
+            const postal = getVal('postalCode');
+            const country = getVal('country');
+            const phone = getVal('phone');
+
+            const orderData = {
+                ShipToAddress: {
+                    FirstName: firstName,
+                    LastName: lastName,
+                    Line1: line1,
+                    Line2: line2,
+                    City: city,
+                    State: state,
+                    CountryCode: country,
+                    PostalCode: postal,
+                    Phone: phone,
+                    IsBusinessAddress: false,
+                },
+                BillingAddress: {
+                    FirstName: firstName,
+                    LastName: lastName,
+                    Line1: line1,
+                    Line2: line2,
+                    City: city,
+                    State: state,
+                    CountryCode: country,
+                    PostalCode: postal,
+                    Phone: phone,
+                },
+                Items: cart.map(item => ({
+                    Sku: item.sku,
+                    Quantity: item.quantity,
+                    ShipType: 'standard',
+                })),
+                PartnerBillingKey: PARTNER_BILLING_KEY_ENCODED,
+            };
+
+            submitOrderBtn.disabled = true;
+            submitOrderBtn.textContent = 'Submitting...';
+            orderStatus.textContent = '⏳ Placing order...';
+            orderStatus.style.color = '#ffb7c5';
+
+            try {
+                const result = await gootenFetch('https://api.print.io/api/orders', {
+                    method: 'POST',
+                    body: JSON.stringify(orderData),
+                });
+                orderStatus.textContent = `✅ Order placed! ID: ${result.OrderId || 'success'}`;
+                orderStatus.style.color = '#ffb7c5';
+                cart = [];
+                renderCart();
+                updateBadge();
+                checkoutForm.classList.remove('open');
+                checkoutToggle.textContent = 'Checkout';
+            } catch (err) {
+                console.error(err);
+                orderStatus.textContent = `❌ Error: ${err.message || 'Unknown error'}`;
+                orderStatus.style.color = '#ff007f';
+            } finally {
+                submitOrderBtn.disabled = false;
+                submitOrderBtn.textContent = 'Place Order';
+            }
+        });
+
+        // ─── Mobile drag ───
+        let startY = 0, currentY = 0, isDragging = false;
+        apiDrawer.addEventListener('touchstart', (e) => {
+            startY = e.touches[0].clientY;
+            isDragging = true;
+        }, { passive: true });
+        apiDrawer.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            currentY = e.touches[0].clientY;
+        }, { passive: true });
+        apiDrawer.addEventListener('touchend', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            const diff = startY - currentY;
+            if (diff < -60 && apiDrawer.classList.contains('open')) {
+                toggleTopDrawer();
+            }
+            startY = 0; currentY = 0;
+        }, { passive: true });
+
+        // ─── Init ───
+        renderCart();
+        updateBadge();
+        console.log('🛒 Storefront ready! Click "Store" to open.');
+        console.log('📦 Fetching product catalog from Gooten API...');
+    </script>
 </body>
 </html>
