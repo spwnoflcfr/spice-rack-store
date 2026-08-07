@@ -7,9 +7,7 @@
     <!-- ─── FIX: Allow connections to Gooten API ─── -->
     <meta http-equiv="Content-Security-Policy" content="connect-src 'self' data: blob: https://api.print.io https://*.print.io;">
 
-    <title>Spice Rack Store</title>
-        <link rel="icon" href="e45a18e9-f45b-4f07-bfa3-47c5842bc957.png" type="image/x-icon" />
-
+    <title>Spice Rack Store n' Mo'</title>
     <link rel="icon" href="https://bafybeiab2kgtb226q5i5vqwsvazn37n675o5zmxr6pwkyhe64jljedvsoe.ipfs.dweb.link?filename=woolong_neologo.jpg" type="image/x-icon" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DotGothic16&display=swap" rel="stylesheet" />
@@ -159,7 +157,7 @@
             flex: 2;
             overflow-y: auto;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Slightly wider for buttons */
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 16px;
             padding-right: 8px;
         }
@@ -223,7 +221,7 @@
             margin: 4px 0;
         }
 
-        /* ─── Button Group Layout ─── */
+        /* ─── PATTERNED BUTTONS FOR PRODUCT ACTIONS ─── */
         .product-actions {
             display: flex;
             gap: 6px;
@@ -240,22 +238,23 @@
             border-radius: 4px;
             transition: 0.2s;
             text-transform: uppercase;
+            color: #fff;
+            /* Base pattern for all 3 buttons: small repeating pink sparkle/star */
+            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 4px, rgba(255,77,158,0.1) 4px, rgba(255,77,158,0.1) 8px);
+            background-size: 11px 11px;
         }
         .btn-quickview {
-            background: #a0337a;
-            color: #fff;
+            background-color: #a0337a;
         }
-        .btn-quickview:hover { background: #ffd1dc; color: #000; }
+        .btn-quickview:hover { background-color: #ffd1dc; color: #000; background-image: none; }
         .btn-addcart {
-            background: #ff4d9e;
-            color: #000;
+            background-color: #ff4d9e;
         }
-        .btn-addcart:hover { background: #ffffff; box-shadow: 0 0 12px #ffffff; }
+        .btn-addcart:hover { background-color: #ffffff; color: #000; box-shadow: 0 0 12px #ffffff; background-image: none; }
         .btn-instabuy {
-            background: #ff007f;
-            color: #fff;
+            background-color: #ff007f;
         }
-        .btn-instabuy:hover { background: #ffb7c5; color: #000; }
+        .btn-instabuy:hover { background-color: #ffb7c5; color: #000; background-image: none; }
         
         .product-actions button:disabled { opacity: 0.4; cursor: not-allowed; }
 
@@ -674,50 +673,37 @@
         .cta-button:hover { background: #ffffff; color: #000; box-shadow: 0 0 10px #ffffff; }
         .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ff4d9e; font-size: clamp(0.6rem, 2vw, 0.8rem); color: #ff99cc; }
 
-        /* ─── UPDATED Floating X and Linktree (Patterned Backgrounds) ─── */
-        .x-float, .linktree-float {
-            position: fixed; bottom: 25px; width: 65px; height: 65px;
+        /* ─── Floating X and Linktree (Reverted to Standard Single Icons) ─── */
+        .x-float {
+            position: fixed; bottom: 25px; right: 25px; width: 65px; height: 65px;
+            background: #000000; /* Standard black for X */
             border: 3px solid #ff4d9e;
             border-radius: 50%; display: flex; justify-content: center;
-            align-items: center; text-decoration: none;
+            align-items: center; color: white; font-size: 2rem; text-decoration: none;
             box-shadow: 0 0 25px rgba(255, 77, 158, 0.8);
             transition: 0.3s ease; z-index: 999;
-            /* Pattern handling via background-image */
-            background-size: 30px 30px; /* Size of individual emojis/logos */
-            background-repeat: repeat;  /* Makes it tile like a pattern */
-            background-position: center;
-            font-size: 0px; /* Hides the actual <i> tag, relying on background */
         }
-        .x-float:hover, .linktree-float:hover { 
+        .x-float:hover { 
+            transform: scale(1.15); 
+            background: #1a1a1a;
+            box-shadow: 0 0 35px #ff4d9e, 0 0 60px #ffb7c5;
+        }
+        .x-float i { font-size: 2rem; }
+
+        .linktree-float {
+            position: fixed; bottom: 25px; left: 25px; width: 65px; height: 65px;
+            background: #39e09e; 
+            border: 3px solid #ff4d9e;
+            border-radius: 50%; display: flex; justify-content: center;
+            align-items: center; color: white; font-size: 2rem; text-decoration: none;
+            box-shadow: 0 0 25px rgba(255, 77, 158, 0.8);
+            transition: 0.3s ease; z-index: 999;
+        }
+        .linktree-float:hover { 
             transform: scale(1.15); 
             box-shadow: 0 0 35px #ff4d9e, 0 0 60px #ffb7c5;
         }
-        /* X Button: White fill, Tiled X logo */
-        .x-float {
-            right: 25px;
-            background-color: #ffffff;
-            background-image: url('x-logo.png'); /* make sure you have this file! */
-        }
-        .x-float:hover {
-            background-color: #f0f0f0;
-        }
-        /* Linktree Button: Green fill, Tiled Tree Emoji (CSS fallback) */
-        .linktree-float {
-            left: 25px;
-            background-color: #39e09e;
-            font-size: 0px; 
-        }
-        /* This uses a pure CSS HTML Entity to create a repeating tree pattern */
-        .linktree-float::before {
-            content: "🌳"; 
-            font-size: 24px;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-        }
+        .linktree-float i { font-size: 2rem; }
 
         /* ─── FALLING BACKGROUND ELEMENTS ─── */
         .sakura-container { 
@@ -850,9 +836,9 @@
         </div>
     </div>
 
-    <!-- UPDATED: X (formerly Twitter) & Linktree (Patterned buttons) -->
-    <a href="https://x.com/MiladySpice" class="x-float" target="_blank"></a>
-    <a href="https://linktr.ee/miladyspice" class="linktree-float" target="_blank"></a>
+    <!-- REVERTED: Standard X and Linktree Icons -->
+    <a href="https://x.com/MiladySpice" class="x-float" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+    <a href="https://linktr.ee/miladyspice" class="linktree-float" target="_blank"><i class="fa-solid fa-tree"></i></a>
 
     <script>
         // ─── FALLING BACKGROUND ELEMENTS (Pills, Syringes, Wine) ───
@@ -883,7 +869,7 @@
         const PARTNER_BILLING_KEY_ENCODED = encodeURIComponent(PARTNER_BILLING_KEY_RAW);
 
         // ─── API SKUs (ACTIVE PRODUCTS) ───
-        // Limited to the Car Magnet for testing. Other products preserved in text file.
+        // Limited to the Car Magnet for testing.
         const PRODUCT_SKUS = [
             { sku: 'CarMagnet_3x11.5', price: 12.99, currency: 'USD' }
         ];
