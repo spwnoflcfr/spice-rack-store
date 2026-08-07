@@ -221,7 +221,7 @@
             margin: 4px 0;
         }
 
-        /* ─── NEW: Button Group Layout ─── */
+        /* ─── Button Group Layout ─── */
         .product-actions {
             display: flex;
             gap: 6px;
@@ -672,40 +672,49 @@
         .cta-button:hover { background: #ffffff; color: #000; box-shadow: 0 0 10px #ffffff; }
         .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ff4d9e; font-size: clamp(0.6rem, 2vw, 0.8rem); color: #ff99cc; }
 
-        /* ─── Floating X and Linktree ─── */
+        /* ─── UPDATED Floating X and Linktree (Patterned Backgrounds) ─── */
+        .x-float, .linktree-float {
+            position: fixed; bottom: 25px; width: 65px; height: 65px;
+            border: 3px solid #ff4d9e;
+            border-radius: 50%; display: flex; justify-content: center;
+            align-items: center; text-decoration: none;
+            box-shadow: 0 0 25px rgba(255, 77, 158, 0.8);
+            transition: 0.3s ease; z-index: 999;
+            /* Pattern handling via background-image */
+            background-size: 30px 30px; /* Size of individual emojis/logos */
+            background-repeat: repeat;  /* Makes it tile like a pattern */
+            background-position: center;
+            font-size: 0px; /* Hides the actual <i> tag, relying on background */
+        }
+        .x-float:hover, .linktree-float:hover { 
+            transform: scale(1.15); 
+            box-shadow: 0 0 35px #ff4d9e, 0 0 60px #ffb7c5;
+        }
+        /* X Button: White fill, Tiled X logo */
         .x-float {
-            position: fixed; bottom: 25px; right: 25px; width: 65px; height: 65px;
-            background: #ffffff;
-            border: 3px solid #ff4d9e;
-            border-radius: 50%; display: flex; justify-content: center;
-            align-items: center; 
-            color: #000000;
-            font-size: 2rem; text-decoration: none;
-            box-shadow: 0 0 25px rgba(255, 77, 158, 0.8);
-            transition: 0.3s ease; z-index: 999;
+            right: 25px;
+            background-color: #ffffff;
+            background-image: url('x-logo.png'); /* make sure you have this file! */
         }
-        .x-float:hover { 
-            transform: scale(1.15); 
-            box-shadow: 0 0 35px #ff4d9e, 0 0 60px #ffb7c5;
+        .x-float:hover {
+            background-color: #f0f0f0;
         }
-        .x-btn-img {
-            width: 28px;
-            height: 28px;
-            object-fit: contain;
-            display: block;
-        }
+        /* Linktree Button: Green fill, Tiled Tree Emoji (CSS fallback) */
         .linktree-float {
-            position: fixed; bottom: 25px; left: 25px; width: 65px; height: 65px;
-            background: #39e09e; 
-            border: 3px solid #ff4d9e;
-            border-radius: 50%; display: flex; justify-content: center;
-            align-items: center; color: white; font-size: 2rem; text-decoration: none;
-            box-shadow: 0 0 25px rgba(255, 77, 158, 0.8);
-            transition: 0.3s ease; z-index: 999;
+            left: 25px;
+            background-color: #39e09e;
+            font-size: 0px; 
         }
-        .linktree-float:hover { 
-            transform: scale(1.15); 
-            box-shadow: 0 0 35px #ff4d9e, 0 0 60px #ffb7c5;
+        /* This uses a pure CSS HTML Entity to create a repeating tree pattern */
+        .linktree-float::before {
+            content: "🌳"; 
+            font-size: 24px;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
         }
 
         /* ─── FALLING BACKGROUND ELEMENTS ─── */
@@ -839,11 +848,9 @@
         </div>
     </div>
 
-    <!-- X (formerly Twitter) & Linktree -->
-    <a href="https://x.com/MiladySpice" class="x-float" target="_blank">
-        <img src="x-logo.png" alt="X" class="x-btn-img" />
-    </a>
-    <a href="https://linktr.ee/miladyspice" class="linktree-float" target="_blank"><i class="fa-solid fa-tree"></i></a>
+    <!-- UPDATED: X (formerly Twitter) & Linktree (Patterned buttons) -->
+    <a href="https://x.com/MiladySpice" class="x-float" target="_blank"></a>
+    <a href="https://linktr.ee/miladyspice" class="linktree-float" target="_blank"></a>
 
     <script>
         // ─── FALLING BACKGROUND ELEMENTS (Pills, Syringes, Wine) ───
@@ -892,7 +899,6 @@
         const checkoutForm = document.getElementById('checkoutForm');
         const submitOrderBtn = document.getElementById('submitOrderBtn');
         const orderStatus = document.getElementById('orderStatus');
-        const modal = document.getElementById('quickviewModal');
 
         // ─── State ───
         let cart = [];
