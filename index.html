@@ -619,6 +619,12 @@
             box-shadow: 0 0 25px rgba(255, 77, 158, 0.8); /* Strong pink glow */
             transition: 0.3s ease; z-index: 999;
         }
+                .x-btn-img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain; /* Prevents logo from stretching */
+            display: block;
+        }
         .x-float:hover { 
             transform: scale(1.15); 
             box-shadow: 0 0 35px #ff4d9e, 0 0 60px #ffb7c5;
@@ -771,7 +777,9 @@
     </div>
 
     <!-- X (formerly Twitter) & Linktree -->
-    <a href="https://x.com/MiladySpice" class="x-float" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+<a href="https://x.com/MiladySpice" class="x-float" target="_blank">
+    <img src="x-logo.png" alt="X" class="x-btn-img" />
+</a>
     <a href="https://linktr.ee/miladyspice" class="linktree-float" target="_blank"><i class="fa-solid fa-tree"></i></a>
 
     <script>
