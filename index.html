@@ -607,14 +607,20 @@
         .cta-button:hover { background: #ffffff; color: #000; box-shadow: 0 0 10px #ffffff; }
         .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ff4d9e; font-size: clamp(0.6rem, 2vw, 0.8rem); color: #ff99cc; }
 
-        /* ─── X (Twitter) Floating Button ─── */
+        /* ─── UPDATED: X (Twitter) Floating Button ─── */
         .x-float {
             position: fixed; bottom: 25px; right: 25px; width: 65px; height: 65px;
-            background: #000000; border-radius: 50%; display: flex; justify-content: center;
+            background: #000000; /* Keeps X branding */
+            border: 3px solid #ff4d9e; /* Bright pink neon border */
+            border-radius: 50%; display: flex; justify-content: center;
             align-items: center; color: white; font-size: 2rem; text-decoration: none;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.6); transition: 0.3s ease; z-index: 999;
+            box-shadow: 0 0 25px rgba(255, 77, 158, 0.8); /* Strong pink glow */
+            transition: 0.3s ease; z-index: 999;
         }
-        .x-float:hover { transform: scale(1.15); }
+        .x-float:hover { 
+            transform: scale(1.15); 
+            box-shadow: 0 0 35px #ff4d9e, 0 0 60px #ffb7c5;
+        }
 
         /* ─── Linktree Floating Button ─── */
         .linktree-float {
