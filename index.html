@@ -12,6 +12,58 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DotGothic16&display=swap" rel="stylesheet" />
     <style>
+
+
+                /* ─── PATTERNED EMOJI BUTTONS ─── */
+        .btn-pattern-cupcake {
+            background-image: repeating-linear-gradient(45deg, #ffb7c5 0px, #ffb7c5 30px, #ffd1dc 30px, #ffd1dc 60px);
+            background-size: 60px 60px;
+        }
+        .btn-pattern-cupcake::before {
+            content: "🧁"; font-size: 2.5rem; opacity: 0.3;
+            position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            pointer-events: none;
+            background-image: repeating-linear-gradient(45deg, transparent 0px, transparent 30px, #ff4d9e 30px, #ff4d9e 31px);
+            background-size: 60px 60px;
+        }
+
+        .btn-pattern-pepper {
+            background-image: repeating-linear-gradient(45deg, #ff4d9e 0px, #ff4d9e 30px, #ffb7c5 30px, #ffb7c5 60px);
+            background-size: 60px 60px;
+        }
+        .btn-pattern-pepper::before {
+            content: "🌶️"; font-size: 2.5rem; opacity: 0.4;
+            position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            pointer-events: none;
+        }
+
+        .btn-pattern-grin {
+            background-image: repeating-linear-gradient(45deg, #ff9eb5 0px, #ff9eb5 30px, #ff4d9e 30px, #ff4d9e 60px);
+            background-size: 60px 60px;
+        }
+        .btn-pattern-grin::before {
+            content: "😁"; font-size: 2.5rem; opacity: 0.35;
+            position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            pointer-events: none;
+        }
+
+        /* Ensure the button container is relative so the absolute emoji overlays correctly */
+        .buttons-container .cta-button {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            color: #000; /* Ensure text is visible over the pattern */
+            text-shadow: 0 0 4px #ffffff, 0 0 8px #ffffff; /* Add white outline to text for readability */
+        }
+        /* Make sure text sits above the emoji overlay */
+        .buttons-container .cta-button i,
+        .buttons-container .cta-button span {
+            position: relative;
+            z-index: 2;
+        }
         /* ── RESET & BASE ── */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -826,11 +878,26 @@
                         <h1 class="logo">Spice<span class="glitch" data-text="Rack">Rack</span> Store</h1>
                     </a>
 
-                    <div class="project-box"><h2 class="project-title">McGeeverse <span>in SPACE!</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/mcgeeverse" class="cta-button"><i class="fas fa-external-link-alt"></i>McGee</a></div></div>
-                    <div class="project-box"><h2 class="project-title">Sadskullz <span>the Crypt</span></h2><div class="buttons-container"><a href="https://wie.neocities.org/SSz" class="cta-button"><i class="fas fa-external-link-alt"></i>BOO!</a></div></div>
-                    <div class="project-box"><h2 class="project-title">LORE <span>for EVERYTHING!</span></h2><div class="buttons-container"><a href="https://paragraph.com/@the-tempest" class="cta-button"><i class="fas fa-external-link-alt"></i>LORE</a></div></div>
+                                       <div class="project-box">
+                        <h2 class="project-title">McGeeverse <span>in SPACE!</span></h2>
+                        <div class="buttons-container">
+                            <a href="https://wie.neocities.org/mcgeeverse" class="cta-button btn-pattern-cupcake"><i class="fas fa-external-link-alt"></i> McGee</a>
+                        </div>
+                    </div>
 
-                    <div class="footer"><p>© 2026 WOOLONG INTERNATIONAL EXCHANGE. ALL RIGHTS RESERVED.</p></div>
+                    <div class="project-box">
+                        <h2 class="project-title">Sadskullz <span>the Crypt</span></h2>
+                        <div class="buttons-container">
+                            <a href="https://wie.neocities.org/SSz" class="cta-button btn-pattern-pepper"><i class="fas fa-external-link-alt"></i> BOO!</a>
+                        </div>
+                    </div>
+
+                    <div class="project-box">
+                        <h2 class="project-title">LORE <span>for EVERYTHING!</span></h2>
+                        <div class="buttons-container">
+                            <a href="https://paragraph.com/@the-tempest" class="cta-button btn-pattern-grin"><i class="fas fa-external-link-alt"></i> LORE</a>
+                        </div>
+                    </div>                    <div class="footer"><p>© 2026 WOOLONG INTERNATIONAL EXCHANGE. ALL RIGHTS RESERVED.</p></div>
                 </div>
             </div>
         </div>
