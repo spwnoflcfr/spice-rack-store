@@ -726,22 +726,55 @@
         .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ff4d9e; font-size: clamp(0.6rem, 2vw, 0.8rem); color: #ff99cc; }
 
         /* ─── Floating X and Linktree (Reverted to Standard Single Icons) ─── */
-        .x-float {
-            position: fixed; bottom: 25px; right: 25px; width: 65px; height: 65px;
-            background: #ffffff; /* Standard white for X */
-            border: 3px solid #ff4d9e;
-            border-radius: 50%; display: flex; justify-content: center;
-            align-items: center; color: white; font-size: 2rem; text-decoration: none;
-            box-shadow: 0 0 25px rgba(255, 77, 158, 0.8);
-            transition: 0.3s ease; z-index: 999;
-        }
-        .x-float:hover { 
-            transform: scale(1.15); 
-            background: #1a1a1a;
-            box-shadow: 0 0 35px #ff4d9e, 0 0 60px #ffb7c5;
-        }
-        .x-float i { font-size: 2rem; }
+      .x-float {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 65px;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;                  /* white circular background */
+  border: 3px solid #ff4d9e;
+  border-radius: 50%;
+  overflow: hidden;                     /* hide any overflow from the img */
+  box-shadow: 0 0 25px rgba(255, 77, 158, 0.8);
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+  z-index: 999;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
 
+/* The actual image inside the white circle */
+.x-float img {
+  display: block;
+  width: 28px;                          /* adjust to taste */
+  height: 28px;
+  object-fit: contain;
+  filter: none;                         /* default: show the image as-is (black X) */
+  transition: filter 0.18s ease, transform 0.18s ease;
+  pointer-events: none;                 /* let clicks go to the anchor */
+}
+
+/* Hover/focus state: darken circle and invert image so the X becomes white */
+.x-float:hover,
+.x-float:focus {
+  transform: scale(1.15);
+  background: #1a1a1a;
+  box-shadow: 0 0 35px #ff4d9e, 0 0 60px #ffb7c5;
+  outline: none;
+}
+.x-float:hover img,
+.x-float:focus img {
+  filter: invert(1) brightness(1.1);    /* converts black PNG to white on hover */
+}
+
+/* Optional: smaller for mobile */
+@media (max-width: 420px) {
+  .x-float { width: 54px; height: 54px; bottom: 18px; right: 18px; }
+  .x-float img { width: 22px; height: 22px; }
+}
         .linktree-float {
             position: fixed; bottom: 25px; left: 25px; width: 65px; height: 65px;
             background: #39e09e; 
@@ -904,7 +937,9 @@
     </div>
 
     <!-- REVERTED: Standard X and Linktree Icons -->
-    <a href="https://x.com/MiladySpice" class="x-float" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+    <a href="https://x.com/MiladySpice" class="x-float" target="_blank" aria-label="X (MiladySpice)">
+  <img src="x-icon.png" alt="X" />
+</a>
     <a href="https://linktr.ee/miladyspice" class="linktree-float" target="_blank"><i class="fa-solid fa-tree"></i></a>
 
     <script>
